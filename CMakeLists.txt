@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(webots_controller)
+project(webots_client)
 
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)

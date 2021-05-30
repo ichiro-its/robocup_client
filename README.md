@@ -1,2 +1,2 @@
-# webots_controller
-ROS2 webots controller package
+# webots_client
+ROS 2 client project for Webots API

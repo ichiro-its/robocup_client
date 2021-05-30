@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>webots_controller</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <name>webots_client</name>
+  <version>0.1.0</version>
+  <description>ROS 2 client project for Webots API</description>
   <maintainer email="nathanterbaik@gmail.com">Nathanael</maintainer>
   <license>MIT License</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
