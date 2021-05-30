@@ -18,13 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef WEBOT_CLIENT__ROBOT_CLIENT_HPP_
-#define WEBOT_CLIENT__ROBOT_CLIENT_HPP_
+#ifndef WEBOTS_CLIENT__ROBOT_CLIENT_HPP_
+#define WEBOTS_CLIENT__ROBOT_CLIENT_HPP_
 
 #include <musen/musen.hpp>
 
 #include <string>
 #include <memory>
+
+#include "./messages.pb.h"
 
 namespace webots_client
 {
@@ -44,4 +46,4 @@ public:
 
 }  // namespace webots_client
 
-#endif  // WEBOT_CLIENT__ROBOT_CLIENT_HPP_
+#endif  // WEBOTS_CLIENT__ROBOT_CLIENT_HPP_

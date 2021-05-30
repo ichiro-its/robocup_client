@@ -20,11 +20,8 @@
 
 #include <webots_client/robot_client.hpp>
 
-#include <cstring>
-#include <string>
 #include <memory>
-
-#include <musen/musen.hpp>
+#include <string>
 
 namespace webots_client
 {
@@ -67,4 +64,4 @@ int RobotClient::send(const ActuatorRequests & data)
   return musen::BaseClient::send((const char *)&data, sizeof(data));
 }
 
-} // namespace webots_client
+}  // namespace webots_client
