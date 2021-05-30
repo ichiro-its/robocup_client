@@ -18,33 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef WEBOTS_CLIENT__ROBOT_CLIENT_HPP_
-#define WEBOTS_CLIENT__ROBOT_CLIENT_HPP_
-
-#include <musen/musen.hpp>
-
-#include <string>
-#include <memory>
+#ifndef WEBOTS_CLIENT__WEBOTS_CLIENT_HPP_
+#define WEBOTS_CLIENT__WEBOTS_CLIENT_HPP_
 
 #include "./messages.pb.h"
+#include "./robot_client.hpp"
+#include "./message_handler.hpp"
 
-namespace webots_client
-{
-
-class RobotClient : public musen::BaseClient
-{
-public:
-  explicit RobotClient(
-    const std::string & host, const int & port,
-    std::shared_ptr<musen::TcpSocket> tcp_socket = std::make_shared<musen::TcpSocket>());
-
-  bool connect();
-
-  void receive_data(char * buffer, int bytes);
-  std::shared_ptr<SensorMeasurements> receive();
-  int send(const ActuatorRequests & data);
-};
-
-}  // namespace webots_client
-
-#endif  // WEBOTS_CLIENT__ROBOT_CLIENT_HPP_
+#endif  // WEBOTS_CLIENT__WEBOTS_CLIENT_HPP_

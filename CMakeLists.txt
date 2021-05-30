@@ -22,7 +22,9 @@ include_directories(${PROTOBUF_INCLUDE_DIR})
 protobuf_generate_cpp(PROTO_SRC PROTO_HEADER include/webots_client/messages.proto)
 
 add_library(${PROJECT_NAME}
+  "examples/client.cpp"
   "src/${PROJECT_NAME}/robot_client.cpp"
+  "src/${PROJECT_NAME}/message_handler"
   ${PROTO_SRC})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -40,6 +42,12 @@ install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION "lib"
   LIBRARY DESTINATION "lib"
   RUNTIME DESTINATION "bin")
+
+add_executable(client ${CMAKE_CURRENT_SOURCE_DIR}/examples/client.cpp)
+target_link_libraries(client ${PROJECT_NAME})
+
+install(TARGETS client
+  DESTINATION "lib/${PROJECT_NAME}")
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
