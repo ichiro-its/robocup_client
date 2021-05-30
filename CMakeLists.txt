@@ -17,10 +17,30 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(musen REQUIRED)
 
+add_library(${PROJECT_NAME}
+  "src/${PROJECT_NAME}/robot_client.cpp")
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
+ament_target_dependencies(${PROJECT_NAME}
+  musen)
+
+install(DIRECTORY "include" DESTINATION ".")
+
+install(TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION "lib"
+  LIBRARY DESTINATION "lib"
+  RUNTIME DESTINATION "bin")
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
 
 ament_export_dependencies(musen)
+ament_export_include_directories("include")
+ament_export_libraries(${PROJECT_NAME})
 ament_package()
