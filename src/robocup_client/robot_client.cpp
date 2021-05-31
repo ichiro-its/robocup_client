@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <webots_client/robot_client.hpp>
+#include <robocup_client/robot_client.hpp>
 
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
@@ -26,7 +26,7 @@
 #include <memory>
 #include <string>
 
-namespace webots_client
+namespace robocup_client
 {
 
 const int max_answer_size = 1920 * 1080 * 3 + 1000;
@@ -98,4 +98,4 @@ int RobotClient::send(const ActuatorRequests & data)
 }
 
 
-}  // namespace webots_client
+}  // namespace robocup_client

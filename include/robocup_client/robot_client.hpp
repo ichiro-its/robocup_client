@@ -18,33 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef WEBOTS_CLIENT__MESSAGE_HANDLER_HPP_
-#define WEBOTS_CLIENT__MESSAGE_HANDLER_HPP_
+#ifndef ROBOCUP_CLIENT__ROBOT_CLIENT_HPP_
+#define ROBOCUP_CLIENT__ROBOT_CLIENT_HPP_
 
-#include <memory>
+#include <musen/musen.hpp>
+
 #include <string>
+#include <memory>
+
 #include "./messages.pb.h"
 
-namespace webots_client
+namespace robocup_client
 {
 
-class MessageHandler
+class RobotClient : public musen::BaseClient
 {
 public:
-  MessageHandler();
+  explicit RobotClient(
+    const std::string & host, const int & port,
+    std::shared_ptr<musen::TcpSocket> tcp_socket = std::make_shared<musen::TcpSocket>());
 
-  void addMotorPosition(MotorPosition * motorPosition, std::string name, double position);
-  void addMotorVelocities(MotorVelocity * motorVelocity, std::string name, double velocity);
-  void addMotorForces(MotorForce * motorForce, std::string name, double force);
-  void addMotorTorque(MotorTorque * motorTorque, std::string name, double torque);
-  void addMotorPID(MotorPID * motorPID, std::string name, Vector3 PID);
-  void addSensorTimeStep(SensorTimeStep * sensor, std::string name, uint32_t timeStep);
-  void addCameraQuality(CameraQuality * camera, std::string name, double quality);
-  void addCameraExposure(CameraExposure * camera, std::string name, double exposure);
+  bool connect();
 
-  std::shared_ptr<ActuatorRequests> actuator_request;
+  void receive_data(char * buffer, int bytes);
+  std::shared_ptr<SensorMeasurements> receive();
+  int send(const ActuatorRequests & data);
 };
 
-}  // namespace webots_client
+}  // namespace robocup_client
 
-#endif  // WEBOTS_CLIENT__MESSAGE_HANDLER_HPP_
+#endif  // ROBOCUP_CLIENT__ROBOT_CLIENT_HPP_

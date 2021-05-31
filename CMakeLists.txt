@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(webots_client)
+project(robocup_client)
 
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)
@@ -19,7 +19,7 @@ find_package(musen REQUIRED)
 find_package(Protobuf REQUIRED)
 
 include_directories(${PROTOBUF_INCLUDE_DIR})
-protobuf_generate_cpp(PROTO_SRC PROTO_HEADER include/webots_client/messages.proto)
+protobuf_generate_cpp(PROTO_SRC PROTO_HEADER include/robocup_client/messages.proto)
 
 add_library(${PROJECT_NAME}
   "examples/client.cpp"

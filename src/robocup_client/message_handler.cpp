@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <webots_client/message_handler.hpp>
+#include <robocup_client/robocup_client.hpp>
 #include <memory>
 #include <string>
 
-namespace webots_client
+namespace robocup_client
 {
 
 
@@ -83,4 +83,4 @@ void MessageHandler::addCameraExposure(CameraExposure * camera, std::string name
   camera->set_exposure(exposure);
 }
 
-}  // namespace webots_client
+}  // namespace robocup_client

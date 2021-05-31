@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <webots_client/webots_client.hpp>
+#include <robocup_client/robocup_client.hpp>
 
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
   std::string host = argv[1];
   int port = std::stoi(argv[2]);
 
-  webots_client::RobotClient client(host, port);
+  robocup_client::RobotClient client(host, port);
   if (!client.connect()) {
     std::cerr << "Failed to connect to server on port " <<
       client.get_port() << "!" << std::endl;
@@ -45,8 +45,8 @@ int main(int argc, char * argv[])
     return 1;
   }
 
-  webots_client::MessageHandler message;
-  message.addMotorPosition(message.actuator_request->add_motor_positions(), "Head", -1.2);
+  robocup_client::MessageHandler message;
+  message.addMotorPosition(message.actuator_request->add_motor_positions(), "Head", 1.2);
   message.addSensorTimeStep(message.actuator_request->add_sensor_time_steps(), "Camera", 16);
 
   while (true) {
@@ -56,7 +56,6 @@ int main(int argc, char * argv[])
 
       std::string printout;
       google::protobuf::TextFormat::PrintToString(*sensors, &printout);
-      std::cout << sensors << std::endl;
     } catch (const std::runtime_error & exc) {
       std::cerr << "Runtime error: " << exc.what() << std::endl;
     }
