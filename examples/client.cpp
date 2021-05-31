@@ -24,9 +24,9 @@
 #include <google/protobuf/text_format.h>
 #include <unistd.h>
 
+#include <fstream>
 #include <iostream>
 #include <string>
-
 
 int main(int argc, char * argv[])
 {
@@ -46,16 +46,19 @@ int main(int argc, char * argv[])
   }
 
   robocup_client::MessageHandler message;
-  message.addMotorPosition(message.actuator_request->add_motor_positions(), "Head", 1.2);
-  message.addSensorTimeStep(message.actuator_request->add_sensor_time_steps(), "Camera", 16);
+  message.add_motor_position("Head", 1.2);
+  message.add_sensor_time_step("Camera", 16);
+  message.add_sensor_time_step("gyro", 16);
+  message.add_sensor_time_step("accelerometer", 16);
 
-  while (true) {
+  while (client.get_tcp_socket()->is_connected()) {
     try {
-      client.send(*message.actuator_request);
+      client.send(*message.get_actuator_request());
       auto sensors = client.receive();
 
       std::string printout;
       google::protobuf::TextFormat::PrintToString(*sensors, &printout);
+      std::cout << printout << std::endl;
     } catch (const std::runtime_error & exc) {
       std::cerr << "Runtime error: " << exc.what() << std::endl;
     }
