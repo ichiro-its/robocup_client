@@ -24,9 +24,9 @@
 #include <google/protobuf/text_format.h>
 #include <unistd.h>
 
+#include <fstream>
 #include <iostream>
 #include <string>
-
 
 int main(int argc, char * argv[])
 {
@@ -46,16 +46,55 @@ int main(int argc, char * argv[])
   }
 
   robocup_client::MessageHandler message;
-  message.addMotorPosition(message.actuator_request->add_motor_positions(), "Head", 1.2);
-  message.addSensorTimeStep(message.actuator_request->add_sensor_time_steps(), "Camera", 16);
+  message.add_motor_position("neck_pitch", 1.2);
+  message.add_motor_position("neck_yaw", 0.8);
+  message.add_sensor_time_step("Camera", 16);
+  message.add_sensor_time_step("gyro", 8);
+  message.add_sensor_time_step("accelerometer", 16);
+  message.add_sensor_time_step("neck_yaw_s", 8);
+  message.add_sensor_time_step("neck_pitch_s", 8);
 
-  while (true) {
+  while (client.get_tcp_socket()->is_connected()) {
     try {
-      client.send(*message.actuator_request);
+      client.send(*message.get_actuator_request());
       auto sensors = client.receive();
 
-      std::string printout;
-      google::protobuf::TextFormat::PrintToString(*sensors, &printout);
+      // Get Gyro Data
+      if (sensors.get()->gyros_size() > 0) {
+        auto gyro = sensors.get()->gyros(0);
+        std::cout << gyro.name() << " " << gyro.value().x() << " " << gyro.value().y() <<
+          " " << gyro.value().z() << std::endl;
+        std::cout << std::endl;
+      }
+
+      // Get Accelerometer Data
+      if (sensors.get()->accelerometers_size() > 0) {
+        auto accelerometer = sensors.get()->accelerometers(0);
+        std::cout << accelerometer.name() << " " << accelerometer.value().x() << "  " <<
+          accelerometer.value().y() <<
+          " " << accelerometer.value().z() << std::endl;
+        std::cout << std::endl;
+      }
+
+      // Get Position Sensor Data
+      for (int i = 0; i < sensors.get()->position_sensors_size(); i++) {
+        auto position_sensor = sensors.get()->position_sensors(i);
+        std::cout << position_sensor.name() << " " << position_sensor.value() << std::endl;
+      }
+      std::cout << std::endl;
+
+      // Get Camera Data
+      if (sensors.get()->cameras_size() > 0) {
+        auto camera = sensors.get()->cameras(0);
+        std::cout << camera.name() << " " << camera.width() <<
+          " " << camera.height() << " " << camera.quality() <<
+          " " << sizeof(camera.image()) << std::endl;
+      }
+      std::cout << std::endl;
+
+      // Get time
+      auto time = sensors.get()->time();
+      std::cout << time << std::endl;
     } catch (const std::runtime_error & exc) {
       std::cerr << "Runtime error: " << exc.what() << std::endl;
     }

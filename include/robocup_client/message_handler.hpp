@@ -33,15 +33,18 @@ class MessageHandler
 public:
   MessageHandler();
 
-  void addMotorPosition(MotorPosition * motorPosition, std::string name, double position);
-  void addMotorVelocities(MotorVelocity * motorVelocity, std::string name, double velocity);
-  void addMotorForces(MotorForce * motorForce, std::string name, double force);
-  void addMotorTorque(MotorTorque * motorTorque, std::string name, double torque);
-  void addMotorPID(MotorPID * motorPID, std::string name, Vector3 PID);
-  void addSensorTimeStep(SensorTimeStep * sensor, std::string name, uint32_t timeStep);
-  void addCameraQuality(CameraQuality * camera, std::string name, double quality);
-  void addCameraExposure(CameraExposure * camera, std::string name, double exposure);
+  void add_motor_position(std::string name, double position);
+  void add_motor_velocity(std::string name, double velocity);
+  void add_motor_force(std::string name, double force);
+  void add_motor_torque(std::string name, double torque);
+  void add_motor_pid(std::string name, Vector3 pid);
+  void add_sensor_time_step(std::string name, uint32_t timeStep);
+  void add_camera_quality(std::string name, double quality);
+  void add_camera_exposure(std::string name, double exposure);
 
+  std::shared_ptr<ActuatorRequests> get_actuator_request();
+
+private:
   std::shared_ptr<ActuatorRequests> actuator_request;
 };
 

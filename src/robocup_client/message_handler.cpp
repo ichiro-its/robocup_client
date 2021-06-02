@@ -31,56 +31,65 @@ MessageHandler::MessageHandler()
 {
 }
 
-void MessageHandler::addMotorPosition(
-  MotorPosition * motorPosition, std::string name,
-  double position)
+void MessageHandler::add_motor_position(std::string name, double position)
 {
-  motorPosition->set_name(name);
-  motorPosition->set_position(position);
+  auto motor_position = actuator_request->add_motor_positions();
+  motor_position->set_name(name);
+  motor_position->set_position(position);
 }
 
-void MessageHandler::addMotorVelocities(
-  MotorVelocity * motorVelocity, std::string name,
-  double velocity)
+void MessageHandler::add_motor_velocity(std::string name, double velocity)
 {
-  motorVelocity->set_name(name);
-  motorVelocity->set_velocity(velocity);
+  auto motor_velocity = actuator_request->add_motor_velocities();
+  motor_velocity->set_name(name);
+  motor_velocity->set_velocity(velocity);
 }
 
-void MessageHandler::addMotorForces(MotorForce * motorForce, std::string name, double force)
+void MessageHandler::add_motor_force(std::string name, double force)
 {
-  motorForce->set_name(name);
-  motorForce->set_force(force);
+  auto motor_force = actuator_request->add_motor_forces();
+  motor_force->set_name(name);
+  motor_force->set_force(force);
 }
 
-void MessageHandler::addMotorTorque(MotorTorque * motorTorque, std::string name, double torque)
+void MessageHandler::add_motor_torque(std::string name, double torque)
 {
-  motorTorque->set_name(name);
-  motorTorque->set_torque(torque);
+  auto motor_torque = actuator_request->add_motor_torques();
+  motor_torque->set_name(name);
+  motor_torque->set_torque(torque);
 }
 
-void MessageHandler::addMotorPID(MotorPID * motorPID, std::string name, Vector3 PID)
+void MessageHandler::add_motor_pid(std::string name, Vector3 pid)
 {
-  motorPID->set_name(name);
-  motorPID->set_allocated_pid(&PID);
+  auto motor_pid = actuator_request->add_motor_pids();
+  motor_pid->set_name(name);
+  motor_pid->set_allocated_pid(&pid);
 }
 
-void MessageHandler::addSensorTimeStep(SensorTimeStep * sensor, std::string name, uint32_t timeStep)
+void MessageHandler::add_sensor_time_step(std::string name, uint32_t timeStep)
 {
+  auto sensor = actuator_request->add_sensor_time_steps();
   sensor->set_name(name);
   sensor->set_timestep(timeStep);
 }
 
-void MessageHandler::addCameraQuality(CameraQuality * camera, std::string name, double quality)
+void MessageHandler::add_camera_quality(std::string name, double quality)
 {
+  auto camera = actuator_request->add_camera_qualities();
   camera->set_name(name);
   camera->set_quality(quality);
 }
 
-void MessageHandler::addCameraExposure(CameraExposure * camera, std::string name, double exposure)
+void MessageHandler::add_camera_exposure(std::string name, double exposure)
 {
+  auto camera = actuator_request->add_camera_exposures();
   camera->set_name(name);
   camera->set_exposure(exposure);
+}
+
+std::shared_ptr<ActuatorRequests> MessageHandler::get_actuator_request()
+{
+  return actuator_request;
 }
 
 }  // namespace robocup_client
