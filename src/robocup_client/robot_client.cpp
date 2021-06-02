@@ -44,7 +44,7 @@ bool RobotClient::connect()
 
   std::string response = receive_string(8);
 
-  return !(response.compare("Welcome") == 0);
+  return response.compare("Welcome") != 0;
 }
 
 
