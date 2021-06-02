@@ -84,8 +84,7 @@ int main(int argc, char * argv[])
       std::cout << std::endl;
 
       // Get Camera Data
-      if (sensors.get()->cameras_size() > 0) 
-      {
+      if (sensors.get()->cameras_size() > 0) {
         auto camera = sensors.get()->cameras(0);
         std::cout << camera.name() << " " << camera.width() <<
           " " << camera.height() << " " << camera.quality() <<
