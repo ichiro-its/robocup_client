@@ -46,13 +46,13 @@ int main(int argc, char * argv[])
   }
 
   robocup_client::MessageHandler message;
-  message.add_motor_position("Head", 1.2);
-  message.add_motor_position("Neck", 0.8);
+  message.add_motor_position("neck_pitch", 1.2);
+  message.add_motor_position("neck_yaw", 0.8);
   message.add_sensor_time_step("Camera", 16);
   message.add_sensor_time_step("gyro", 8);
   message.add_sensor_time_step("accelerometer", 16);
-  message.add_sensor_time_step("NeckS", 8);
-  message.add_sensor_time_step("HeadS", 8);
+  message.add_sensor_time_step("neck_yaw_s", 8);
+  message.add_sensor_time_step("neck_pitch_s", 8);
 
   while (client.get_tcp_socket()->is_connected()) {
     try {
