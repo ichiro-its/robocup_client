@@ -84,13 +84,18 @@ int main(int argc, char * argv[])
       std::cout << std::endl;
 
       // Get Camera Data
-      if (sensors.get()->cameras_size() > 0) {
+      if (sensors.get()->cameras_size() > 0) 
+      {
         auto camera = sensors.get()->cameras(0);
         std::cout << camera.name() << " " << camera.width() <<
           " " << camera.height() << " " << camera.quality() <<
           " " << sizeof(camera.image()) << std::endl;
       }
       std::cout << std::endl;
+
+      // Get time
+      auto time = sensors.get()->time();
+      std::cout << time << std::endl;
     } catch (const std::runtime_error & exc) {
       std::cerr << "Runtime error: " << exc.what() << std::endl;
     }
