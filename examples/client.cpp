@@ -48,7 +48,7 @@ int main(int argc, char * argv[])
   robocup_client::MessageHandler message;
   message.add_motor_position("Head", 1.2);
   message.add_motor_position("Neck", 0.8);
-  // message.add_sensor_time_step("Camera", 16);
+  message.add_sensor_time_step("Camera", 16);
   message.add_sensor_time_step("gyro", 8);
   message.add_sensor_time_step("accelerometer", 16);
   message.add_sensor_time_step("NeckS", 8);
@@ -80,6 +80,16 @@ int main(int argc, char * argv[])
       for (int i = 0; i < sensors.get()->position_sensors_size(); i++) {
         auto position_sensor = sensors.get()->position_sensors(i);
         std::cout << position_sensor.name() << " " << position_sensor.value() << std::endl;
+      }
+      std::cout << std::endl;
+
+      // Get Camera Data
+      if (sensors.get()->cameras_size() > 0) {
+        auto camera = sensors.get()->cameras(0);
+        std::cout << camera.name() << " " << camera.width() <<
+          " " << camera.height() << " " << camera.quality() <<
+          " " << std::endl;
+        std::cout << camera.image() << std::endl;
       }
       std::cout << std::endl;
     } catch (const std::runtime_error & exc) {
