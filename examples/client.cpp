@@ -47,18 +47,41 @@ int main(int argc, char * argv[])
 
   robocup_client::MessageHandler message;
   message.add_motor_position("Head", 1.2);
-  message.add_sensor_time_step("Camera", 16);
-  message.add_sensor_time_step("gyro", 16);
+  message.add_motor_position("Neck", 0.8);
+  // message.add_sensor_time_step("Camera", 16);
+  message.add_sensor_time_step("gyro", 8);
   message.add_sensor_time_step("accelerometer", 16);
+  message.add_sensor_time_step("NeckS", 8);
+  message.add_sensor_time_step("HeadS", 8);
 
   while (client.get_tcp_socket()->is_connected()) {
     try {
       client.send(*message.get_actuator_request());
       auto sensors = client.receive();
 
-      std::string printout;
-      google::protobuf::TextFormat::PrintToString(*sensors, &printout);
-      std::cout << printout << std::endl;
+      // Get Gyro Data
+      if (sensors.get()->gyros_size() > 0) {
+        auto gyro = sensors.get()->gyros(0);
+        std::cout << gyro.name() << " " << gyro.value().x() << " " << gyro.value().y() <<
+          " " << gyro.value().z() << std::endl;
+        std::cout << std::endl;
+      }
+
+      // Get Accelerometer Data
+      if (sensors.get()->accelerometers_size() > 0) {
+        auto accelerometer = sensors.get()->accelerometers(0);
+        std::cout << accelerometer.name() << " " << accelerometer.value().x() << "  " <<
+          accelerometer.value().y() <<
+          " " << accelerometer.value().z() << std::endl;
+        std::cout << std::endl;
+      }
+
+      // Get Position Sensor Data
+      for (int i = 0; i < sensors.get()->position_sensors_size(); i++) {
+        auto position_sensor = sensors.get()->position_sensors(i);
+        std::cout << position_sensor.name() << " " << position_sensor.value() << std::endl;
+      }
+      std::cout << std::endl;
     } catch (const std::runtime_error & exc) {
       std::cerr << "Runtime error: " << exc.what() << std::endl;
     }

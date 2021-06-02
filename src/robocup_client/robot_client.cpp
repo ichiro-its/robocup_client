@@ -33,15 +33,15 @@ const int max_answer_size = 1920 * 1080 * 3 + 1000;
 
 RobotClient::RobotClient(
   const std::string & host, const int & port, std::shared_ptr<musen::TcpSocket> tcp_socket)
-: musen::BaseClient(host, port, tcp_socket)
+: musen::Client(host, port, tcp_socket)
 {
 }
 
 bool RobotClient::connect()
 {
-  musen::BaseClient::connect();
+  musen::Client::connect();
   char response[8];
-  musen::BaseClient::receive(response, 8);
+  receive_raw(response, 8);
 
   if (strncmp(response, "Welcome", 8) != 0) {
     return false;
@@ -55,7 +55,7 @@ void RobotClient::receive_data(char * buffer, int bytes)
 {
   int received = 0;
   while (received < bytes) {
-    int n = musen::BaseClient::receive(buffer + received, bytes - received);
+    int n = receive_raw(buffer + received, bytes - received);
     if (n == -1) {
       disconnect();
     }
@@ -85,7 +85,7 @@ std::shared_ptr<SensorMeasurements> RobotClient::receive()
 int RobotClient::send(const ActuatorRequests & data)
 {
   uint32_t size = htonl(data.ByteSizeLong());
-  int sent = BaseClient::send(reinterpret_cast<char *>(&size), sizeof(uint32_t));
+  int sent = send_raw(reinterpret_cast<char *>(&size), sizeof(uint32_t));
   if (sent == -1) {
     disconnect();
   }

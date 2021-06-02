@@ -31,7 +31,7 @@
 namespace robocup_client
 {
 
-class RobotClient : public musen::BaseClient
+class RobotClient : public musen::Client
 {
 public:
   explicit RobotClient(
