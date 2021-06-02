@@ -25,6 +25,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace robocup_client
 {
@@ -40,14 +41,10 @@ RobotClient::RobotClient(
 bool RobotClient::connect()
 {
   musen::Client::connect();
-  char response[8];
-  receive_raw(response, 8);
 
-  if (strncmp(response, "Welcome", 8) != 0) {
-    return false;
-  }
+  std::string response = receive_string(8);
 
-  return true;
+  return !(response.compare("Welcome") == 0);
 }
 
 
@@ -65,8 +62,7 @@ void RobotClient::receive_data(char * buffer, int bytes)
 
 std::shared_ptr<SensorMeasurements> RobotClient::receive()
 {
-  uint32_t content_size_network;
-  receive_data(reinterpret_cast<char *>(&content_size_network), sizeof(uint32_t));
+  uint32_t content_size_network = Client::receive<uint32_t>().value_or(0);
   const int answer_size = ntohl(content_size_network);
 
   if (answer_size > max_answer_size || answer_size == 0) {
@@ -74,10 +70,9 @@ std::shared_ptr<SensorMeasurements> RobotClient::receive()
   }
 
   SensorMeasurements sensor_measurements;
-  char * buffer = reinterpret_cast<char *>(malloc(answer_size));
-  receive_data(buffer, answer_size);
-  sensor_measurements.ParseFromArray(buffer, answer_size);
-  free(buffer);
+  std::vector<char> buffer(answer_size);
+  receive_data(buffer.data(), answer_size);
+  sensor_measurements.ParseFromArray(buffer.data(), answer_size);
 
   return std::make_shared<SensorMeasurements>(sensor_measurements);
 }
@@ -85,8 +80,8 @@ std::shared_ptr<SensorMeasurements> RobotClient::receive()
 int RobotClient::send(const ActuatorRequests & data)
 {
   uint32_t size = htonl(data.ByteSizeLong());
-  int sent = send_raw(reinterpret_cast<char *>(&size), sizeof(uint32_t));
-  if (sent == -1) {
+  int sent = Client::send<uint32_t>(size);
+  if (sent == 0) {
     disconnect();
   }
   google::protobuf::io::ZeroCopyOutputStream * zeroCopyStream =

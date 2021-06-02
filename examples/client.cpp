@@ -88,8 +88,7 @@ int main(int argc, char * argv[])
         auto camera = sensors.get()->cameras(0);
         std::cout << camera.name() << " " << camera.width() <<
           " " << camera.height() << " " << camera.quality() <<
-          " " << std::endl;
-        std::cout << camera.image() << std::endl;
+          " " << sizeof(camera.image()) << std::endl;
       }
       std::cout << std::endl;
     } catch (const std::runtime_error & exc) {
