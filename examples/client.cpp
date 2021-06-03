@@ -46,8 +46,8 @@ int main(int argc, char * argv[])
   }
 
   robocup_client::MessageHandler message;
-  message.add_motor_position("neck_pitch", 1.2);
-  message.add_motor_position("neck_yaw", 0.8);
+  message.add_motor_position("neck_pitch", 45.0);  // in degrees
+  message.add_motor_position("neck_yaw", 90.0);  // in degrees
   message.add_sensor_time_step("Camera", 16);
   message.add_sensor_time_step("gyro", 8);
   message.add_sensor_time_step("accelerometer", 16);

@@ -16,6 +16,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(musen REQUIRED)
+find_package(keisan REQUIRED)
 find_package(Protobuf REQUIRED)
 
 include_directories(${PROTOBUF_INCLUDE_DIR})
@@ -33,7 +34,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>)
 
 ament_target_dependencies(${PROJECT_NAME}
-  musen Protobuf)
+  musen Protobuf keisan)
 
 install(DIRECTORY "include" DESTINATION ".")
 install(FILES ${PROTO_HEADER} DESTINATION "include/${PROJECT_NAME}")
@@ -55,7 +56,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_export_dependencies(musen Protobuf)
+ament_export_dependencies(musen Protobuf keisan)
 ament_export_include_directories("include")
 ament_export_libraries(${PROJECT_NAME})
 ament_package()
