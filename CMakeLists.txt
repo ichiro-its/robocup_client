@@ -35,8 +35,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 ament_target_dependencies(${PROJECT_NAME}
   musen Protobuf)
 
-install(FILES ${PROTO_SRC} ${PROTO_HEADER} DESTINATION "include/${PROJECT_NAME}")
 install(DIRECTORY "include" DESTINATION ".")
+install(FILES ${PROTO_HEADER} DESTINATION "include/${PROJECT_NAME}")
 
 install(TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
