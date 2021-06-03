@@ -19,7 +19,7 @@ jobs:
           curl -s http://repository.ichiro-its.org/rosdep/setup.bash | bash -s
 
       - name: Build nightly Debian package
-        uses: ichiro-its/ros2-build-and-test-action@main
+        uses: ichiro-its/ros2-build-debian-action@main
         with:
           unique-version: true
 
