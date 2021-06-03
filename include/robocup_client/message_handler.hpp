@@ -41,6 +41,7 @@ public:
   void add_sensor_time_step(std::string name, uint32_t timeStep);
   void add_camera_quality(std::string name, double quality);
   void add_camera_exposure(std::string name, double exposure);
+  void clear_actuator_request();
 
   std::shared_ptr<ActuatorRequests> get_actuator_request();
 
