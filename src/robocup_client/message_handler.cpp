@@ -88,6 +88,11 @@ void MessageHandler::add_camera_exposure(std::string name, double exposure)
   camera->set_exposure(exposure);
 }
 
+void MessageHandler::clear_actuator_request()
+{
+  actuator_request.reset(new ActuatorRequests);
+}
+
 std::shared_ptr<ActuatorRequests> MessageHandler::get_actuator_request()
 {
   return actuator_request;
