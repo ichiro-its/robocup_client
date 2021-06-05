@@ -33,7 +33,8 @@ class MessageHandler
 public:
   MessageHandler();
 
-  void add_motor_position(std::string name, double position);
+  void add_motor_position_in_degree(std::string name, double position);
+  void add_motor_position_in_radian(std::string name, double position);
   void add_motor_velocity(std::string name, double velocity);
   void add_motor_force(std::string name, double force);
   void add_motor_torque(std::string name, double torque);

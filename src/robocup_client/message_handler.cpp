@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <keisan/keisan.hpp>
 #include <robocup_client/robocup_client.hpp>
 #include <memory>
 #include <string>
@@ -31,7 +32,14 @@ MessageHandler::MessageHandler()
 {
 }
 
-void MessageHandler::add_motor_position(std::string name, double position)
+void MessageHandler::add_motor_position_in_degree(std::string name, double position)
+{
+  auto motor_position = actuator_request->add_motor_positions();
+  motor_position->set_name(name);
+  motor_position->set_position(keisan::deg_to_rad(position));
+}
+
+void MessageHandler::add_motor_position_in_radian(std::string name, double position)
 {
   auto motor_position = actuator_request->add_motor_positions();
   motor_position->set_name(name);
