@@ -11,7 +11,7 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -fPIC)
 endif()
 
 find_package(ament_cmake REQUIRED)
@@ -22,7 +22,7 @@ find_package(Protobuf REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIR})
 protobuf_generate_cpp(PROTO_SRC PROTO_HEADER include/robocup_client/messages.proto)
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
   "examples/client.cpp"
   "src/${PROJECT_NAME}/robot_client.cpp"
   "src/${PROJECT_NAME}/message_handler"
