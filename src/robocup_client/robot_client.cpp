@@ -79,23 +79,22 @@ std::shared_ptr<SensorMeasurements> RobotClient::receive()
 
 int RobotClient::send(const ActuatorRequests & data)
 {
-  // std::cout << "inside send function\n";
   uint32_t size = htonl(data.ByteSizeLong());
-  // std::cout << "after htnol\n";
+
   int sent = Client::send<uint32_t>(size);
-  // std::cout << "declare sent\n";
+
   if (sent == 0) {
     disconnect();
   }
+
   google::protobuf::io::ZeroCopyOutputStream * zeroCopyStream =
     new google::protobuf::io::FileOutputStream(get_tcp_socket()->get_sockfd());
-  // std::cout << "declare zeroCopyStream\n";
+
   data.SerializeToZeroCopyStream(zeroCopyStream);
-  // std::cout << "SerializeToZeroCopyStream function\n";
+
   delete zeroCopyStream;
-  // std::cout << "after delete\n";
+
   return sent;
 }
-
 
 }  // namespace robocup_client
