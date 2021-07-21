@@ -44,7 +44,7 @@ bool RobotClient::connect()
 
   std::string response = receive_string(8);
 
-  return response.compare("Welcome") != 0;
+  return response.compare("Welcome") == 1;
 }
 
 
@@ -80,17 +80,21 @@ std::shared_ptr<SensorMeasurements> RobotClient::receive()
 int RobotClient::send(const ActuatorRequests & data)
 {
   uint32_t size = htonl(data.ByteSizeLong());
+
   int sent = Client::send<uint32_t>(size);
+
   if (sent == 0) {
     disconnect();
   }
+
   google::protobuf::io::ZeroCopyOutputStream * zeroCopyStream =
     new google::protobuf::io::FileOutputStream(get_tcp_socket()->get_sockfd());
+
   data.SerializeToZeroCopyStream(zeroCopyStream);
+
   delete zeroCopyStream;
 
   return sent;
 }
-
 
 }  // namespace robocup_client
