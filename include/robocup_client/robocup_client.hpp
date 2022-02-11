@@ -21,7 +21,7 @@
 #ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
 #define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
 
-#include "robocup_client/messages.pb.h"
+#include "./messages.pb.h"
 #include "robocup_client/robot_client/receiver.hpp"
 #include "robocup_client/robot_client/sender.hpp"
 #include "robocup_client/communication/communication.hpp"

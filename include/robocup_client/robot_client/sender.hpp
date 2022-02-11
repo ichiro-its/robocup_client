@@ -26,7 +26,7 @@
 #include <string>
 #include <memory>
 
-#include "robocup_client/messages.pb.h"
+#include "./messages.pb.h"
 
 namespace robocup_client
 {
