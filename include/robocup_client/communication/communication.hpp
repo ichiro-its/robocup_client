@@ -21,8 +21,8 @@
 #ifndef ROBOCUP_CLIENT__COMMUNICATION__COMMUNICATION_HPP_
 #define ROBOCUP_CLIENT__COMMUNICATION__COMMUNICATION_HPP_
 
-#include "robocup_client/communication/_socket/base_socket.hpp"
-#include "robocup_client/communication/_socket/tcp_socket.hpp"
+#include "robocup_client/communication/socket/base_socket.hpp"
+#include "robocup_client/communication/socket/tcp_socket.hpp"
 #include "robocup_client/communication/tcp/client.hpp"
 #include "robocup_client/communication/tcp/receiver.hpp"
 #include "robocup_client/communication/tcp/sender.hpp"

@@ -24,7 +24,7 @@
 #include <memory>
 #include <string>
 
-#include "robocup_client/communication/_socket/tcp_socket.hpp"
+#include "robocup_client/communication/socket/tcp_socket.hpp"
 #include "robocup_client/communication/tcp/receiver.hpp"
 #include "robocup_client/communication/tcp/sender.hpp"
 
