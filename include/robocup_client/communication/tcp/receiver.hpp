@@ -18,13 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#ifndef ROBOCUP_CLIENT__COMMUNICATION__RECEIVER_HPP_
+#define ROBOCUP_CLIENT__COMMUNICATION__RECEIVER_HPP_
 
-#include "robocup_client/messages.pb.h"
-#include "robocup_client/robot_client/receiver.hpp"
-#include "robocup_client/robot_client/sender.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
+#include <optional>
+#include <string>
+#include <utility>
+#include <vector>
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+namespace robocup_client
+{
+
+namespace communication
+{
+
+class Receiver
+{
+public:
+  virtual size_t receive_raw(char * data, const size_t & length);
+
+  std::string receive_string(const size_t & length);
+  std::vector<std::string> receive_strings(
+    const size_t & length, const std::string & delimiter = ",");
+
+  template<typename T>
+  std::optional<T> receive();
+};
+
+template<typename T>
+std::optional<T> Receiver::receive()
+{
+  T data;
+
+  auto received = receive_raw(reinterpret_cast<char *>(&data), sizeof(T));
+
+  if (received < sizeof(T)) {
+    return std::nullopt;
+  }
+
+  return std::make_optional<T>(std::move(data));
+}
+
+} // namespace communication
+
+}  // namespace robocup_client
+
+#endif  // ROBOCUP_CLIENT__COMMUNICATION__RECEIVER_HPP_

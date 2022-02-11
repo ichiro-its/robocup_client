@@ -18,13 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#ifndef ROBOCUP_CLIENT__COMMUNICATION___SOCKET__TCP_SOCKET_HPP_
+#define ROBOCUP_CLIENT__COMMUNICATION___SOCKET__TCP_SOCKET_HPP_
 
-#include "robocup_client/messages.pb.h"
-#include "robocup_client/robot_client/receiver.hpp"
-#include "robocup_client/robot_client/sender.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
+#include "robocup_client/communication/_socket/base_socket.hpp"
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+namespace robocup_client
+{
+
+namespace communication
+{
+
+class TcpSocket : public BaseSocket
+{
+public:
+  bool connect() override;
+};
+
+}  // namespace communication
+
+}  // namespace robocup_client
+
+#endif  // ROBOCUP_CLIENT__COMMUNICATION__SOCKET__TCP_SOCKET_HPP_

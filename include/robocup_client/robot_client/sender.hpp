@@ -18,13 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#ifndef ROBOCUP_CLIENT__ROBOT_CLIENT__SENDER_HPP_
+#define ROBOCUP_CLIENT__ROBOT_CLIENT__SENDER_HPP_
+
+#include "robocup_client/communication/communication.hpp"
+
+#include <string>
+#include <memory>
 
 #include "robocup_client/messages.pb.h"
-#include "robocup_client/robot_client/receiver.hpp"
-#include "robocup_client/robot_client/sender.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+namespace robocup_client
+{
+
+namespace robot_client
+{
+
+class Sender : public robocup_client::communication::Client
+{
+public:
+  explicit Sender(
+    const std::string & host, const int & port,
+    std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket = std::make_shared<robocup_client::communication::TcpSocket>());
+
+  bool connect();
+  int send(const ActuatorRequests & data);
+};
+
+} // namespace robot_client
+
+}  // namespace robocup_client
+
+#endif  // ROBOCUP_CLIENT__ROBOT_CLIENT__SENDER_HPP_

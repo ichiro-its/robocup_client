@@ -18,13 +18,60 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-
-#include "robocup_client/messages.pb.h"
-#include "robocup_client/robot_client/receiver.hpp"
 #include "robocup_client/robot_client/sender.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <google/protobuf/text_format.h>
+
+#include <memory>
+#include <string>
+#include <vector>
+#include <arpa/inet.h>
+
+namespace robocup_client
+{
+
+namespace robot_client
+{
+
+const int max_answer_size = 1920 * 1080 * 3 + 1000;
+
+Sender::Sender(
+  const std::string & host, const int & port, std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket)
+: robocup_client::communication::Client(host, port, tcp_socket)
+{
+}
+
+bool Sender::connect()
+{
+  robocup_client::communication::Client::connect();
+
+  std::string response = receive_string(8);
+
+  return response.compare("Welcome") == 1;
+}
+
+
+int Sender::send(const ActuatorRequests & data)
+{
+  uint32_t size = htonl(data.ByteSizeLong());
+
+  int sent = Client::send<uint32_t>(size);
+
+  if (sent == 0) {
+    disconnect();
+  }
+
+  google::protobuf::io::ZeroCopyOutputStream * zeroCopyStream =
+    new google::protobuf::io::FileOutputStream(get_tcp_socket()->get_sockfd());
+
+  data.SerializeToZeroCopyStream(zeroCopyStream);
+
+  delete zeroCopyStream;
+
+  return sent;
+}
+
+} // namespace robot_client
+
+}  // namespace robocup_client

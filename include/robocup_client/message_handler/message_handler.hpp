@@ -18,33 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOT_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOT_CLIENT_HPP_
+#ifndef ROBOCUP_CLIENT__MESSAGE_HANDLER__MESSAGE_HANDLER_HPP_
+#define ROBOCUP_CLIENT__MESSAGE_HANDLER__MESSAGE_HANDLER_HPP_
 
-#include <musen/musen.hpp>
-
-#include <string>
 #include <memory>
-
-#include "./messages.pb.h"
+#include <string>
+#include "robocup_client/messages.pb.h"
 
 namespace robocup_client
 {
 
-class RobotClient : public musen::Client
+namespace message_handler
+{
+
+class MessageHandler
 {
 public:
-  explicit RobotClient(
-    const std::string & host, const int & port,
-    std::shared_ptr<musen::TcpSocket> tcp_socket = std::make_shared<musen::TcpSocket>());
+  MessageHandler();
 
-  bool connect();
+  void add_motor_position_in_degree(std::string name, double position);
+  void add_motor_position_in_radian(std::string name, double position);
+  void add_motor_velocity(std::string name, double velocity);
+  void add_motor_force(std::string name, double force);
+  void add_motor_torque(std::string name, double torque);
+  void add_motor_pid(std::string name, Vector3 pid);
+  void add_sensor_time_step(std::string name, uint32_t timeStep);
+  void add_camera_quality(std::string name, double quality);
+  void add_camera_exposure(std::string name, double exposure);
+  void clear_actuator_request();
 
-  void receive_data(char * buffer, int bytes);
-  std::shared_ptr<SensorMeasurements> receive();
-  int send(const ActuatorRequests & data);
+  std::shared_ptr<ActuatorRequests> get_actuator_request();
+
+private:
+  std::shared_ptr<ActuatorRequests> actuator_request;
 };
+
+}  // namespace message_handler
 
 }  // namespace robocup_client
 
-#endif  // ROBOCUP_CLIENT__ROBOT_CLIENT_HPP_
+#endif  // ROBOCUP_CLIENT__MESSAGE_HANDLER__MESSAGE_HANDLER_HPP_

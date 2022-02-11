@@ -18,13 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#include <rclcpp/rclcpp.hpp>
 
-#include "robocup_client/messages.pb.h"
-#include "robocup_client/robot_client/receiver.hpp"
-#include "robocup_client/robot_client/sender.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
+#include <chrono>
+#include <memory>
+#include <string>
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#include "robocup_client/node/robocup_client_node.hpp"
+
+using namespace std::chrono_literals;
+
+namespace robocup_client 
+{
+
+RobocupClientNode::RobocupClientNode(rclcpp::Node::SharedPtr node)
+: node(node)
+{
+  node_timer = node->create_wall_timer(
+    8ms,
+    [this]() {
+      // update gyro, accelero, time, and image
+    }
+  );
+}
+}

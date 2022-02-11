@@ -18,13 +18,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#ifndef ROBOCUP_CLIENT__COMMUNICATION__SENDER_HPP_
+#define ROBOCUP_CLIENT__COMMUNICATION__SENDER_HPP_
 
-#include "robocup_client/messages.pb.h"
-#include "robocup_client/robot_client/receiver.hpp"
-#include "robocup_client/robot_client/sender.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
+#include <string>
+#include <vector>
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+namespace robocup_client
+{
+
+namespace communication
+{
+
+class Sender
+{
+public:
+  virtual size_t send_raw(const char * data, const size_t & length);
+
+  size_t send_string(const std::string & data);
+  size_t send_strings(const std::vector<std::string> & data, const std::string & delimiter = ",");
+
+  template<typename T>
+  size_t send(const T & data);
+};
+
+template<typename T>
+size_t Sender::send(const T & data)
+{
+  return send_raw((const char *)&data, sizeof(data));
+}
+
+}  // namespace communication
+
+}  // namespace robocup_client
+
+#endif  // MUSEN__SENDER_HPP_

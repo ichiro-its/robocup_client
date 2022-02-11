@@ -18,13 +18,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-
-#include "robocup_client/messages.pb.h"
-#include "robocup_client/robot_client/receiver.hpp"
-#include "robocup_client/robot_client/sender.hpp"
 #include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#include <string>
+#include <vector>
+
+namespace robocup_client
+{
+
+namespace communication
+{
+
+size_t Sender::send_raw(const char * /*data*/, const size_t & /*length*/)
+{
+  return 0;
+}
+
+size_t Sender::send_string(const std::string & data)
+{
+  return send_raw(data.c_str(), data.size());
+}
+
+size_t Sender::send_strings(
+  const std::vector<std::string> & data, const std::string & delimiter)
+{
+  // Merge data using the delimiter
+  std::string merged_data = "";
+  for (size_t i = 0; i < data.size(); ++i) {
+    merged_data += data[i];
+    if (i != data.size() - 1) {
+      merged_data += delimiter;
+    }
+  }
+
+  // Add a string termination if it doesn't contain one
+  if (merged_data[merged_data.size() - 1] != '\0') {
+    merged_data += '\0';
+  }
+
+  return send_string(merged_data);
+}
+
+}  // namespace communication
+
+}  // namespace robocup_client

@@ -22,10 +22,13 @@
 #include <robocup_client/robocup_client.hpp>
 #include <memory>
 #include <string>
+#include <iostream>
 
 namespace robocup_client
 {
 
+namespace message_handler
+{
 
 MessageHandler::MessageHandler()
 : actuator_request(std::make_shared<ActuatorRequests>())
@@ -36,7 +39,7 @@ void MessageHandler::add_motor_position_in_degree(std::string name, double posit
 {
   auto motor_position = actuator_request->add_motor_positions();
   motor_position->set_name(name);
-  motor_position->set_position(keisan::deg_to_rad(position));
+  motor_position->set_position(position * M_PI / 180.0);
 }
 
 void MessageHandler::add_motor_position_in_radian(std::string name, double position)
@@ -104,5 +107,7 @@ std::shared_ptr<ActuatorRequests> MessageHandler::get_actuator_request()
 {
   return actuator_request;
 }
+
+} // namespace message_handler
 
 }  // namespace robocup_client

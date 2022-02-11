@@ -18,13 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#ifndef ROBOCUP_CLIENT__COMMUNICATION__COMMUNICATION_HPP_
+#define ROBOCUP_CLIENT__COMMUNICATION__COMMUNICATION_HPP_
 
-#include "robocup_client/messages.pb.h"
-#include "robocup_client/robot_client/receiver.hpp"
-#include "robocup_client/robot_client/sender.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
-
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#include "robocup_client/communication/_socket/base_socket.hpp"
+#include "robocup_client/communication/_socket/tcp_socket.hpp"
+#include "robocup_client/communication/tcp/client.hpp"
+#include "robocup_client/communication/tcp/receiver.hpp"
+#include "robocup_client/communication/tcp/sender.hpp"
+#endif  // ROBOCUP_CLIENT__COMMUNICATION__COMMUNICATION_HPP_
