@@ -38,9 +38,12 @@ RobocupClientNode::RobocupClientNode(rclcpp::Node::SharedPtr node)
     8ms,
     [this]() {
       // update gyro, accelero, time, and image
+      robot_client->update_sensors();
     }
   );
 
-  
+  receiver_node = std::make_shared<robocup_client::receiver::ReceiverNode>(node, robot_client);
+  sender_node = std::make_shared<robocup_client::sender::SenderNode>(node, robot_client);
 }
+
 }

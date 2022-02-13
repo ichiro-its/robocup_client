@@ -45,18 +45,14 @@ namespace sender
 class SenderNode 
 {
 public:
-  SenderNode(rclcpp::Node::SharedPtr node, robocup_client::sender::Sender sender);
+  SenderNode(rclcpp::Node::SharedPtr node, robocup_client::robot_client::RobotClient robot_client);
 
 private: 
   std::string get_node_prefix() const;
   
   void publish_image();
 
-  void publish_orientation();
-
   void publish_unit();
-
-  std::shared_ptr<Sender> sender;
 
   rclcpp::Publisher<shisen_interfaces::msg::Image>::SharedPtr image_publisher;
 

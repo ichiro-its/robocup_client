@@ -21,7 +21,6 @@
 #ifndef ROBOCUP_CLIENT__RECEIVER__RECEIVER_HPP_
 #define ROBOCUP_CLIENT__RECEIVER__RECEIVER_HPP_
 
-#include "robocup_client/receiver/node/receiver.hpp"
 #include "robocup_client/receiver/node/receiver_node.hpp"
 
 #endif  // ROBOCUP_CLIENT__RECEIVER__RECEIVER_HPP_

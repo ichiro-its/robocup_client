@@ -25,7 +25,7 @@
 #include <memory>
 
 #include "./messages.pb.h"
-#include "robocup_client/communication/communication.hpp"
+#include "robocup_client/robocup_client.hpp"
 
 namespace robocup_client
 {
@@ -43,6 +43,22 @@ public:
   void receive_data(char * buffer, int bytes);
   int send(const ActuatorRequests & data);
   std::shared_ptr<SensorMeasurements> receive();
+
+  void update_sensors();
+  void set_positions(std::vector<tachimawari_interfaces::msg::Joint> joints);
+
+  std::shared_ptr<std::vector<PositionSensorMeasurement>> get_positions();
+  std::shared_ptr<AccelerometerMeasurement> get_accelero();
+  std::shared_ptr<CameraMeasurement> get_camera();
+  std::shared_ptr<GyroMeasurement> get_gyro();
+
+private:
+  std::shared_ptr<AccelerometerMeasurement> current_accelero;
+  std::shared_ptr<CameraMeasurement> current_camera;
+  std::shared_ptr<GyroMeasurement> current_gyro;
+  std::shared_ptr<std::vector<PositionSensorMeasurement>> current_positions;
+  
+  robocup_client::message_handler::MessageHandler message;
 };
 
 } // namespace robot_client

@@ -42,13 +42,11 @@ class ReceiverNode
 {
 public:
   ReceiverNode(
-    rclcpp::Node::SharedPtr node, robocup_client::receiver::Receiver receiver);
+    rclcpp::Node::SharedPtr node, robocup_client::robot_client::RobotClient robot_client);
   
   private:
     std::string get_node_prefix() const;
 
-    std::shared_ptr<robocup_client::receiver::Receiver> receiver;
-    
     rclcpp::Subscription<tachimawari_interfaces::msg::SetJoints>::SharedPtr set_joints_subscriber;
 
     rclcpp::Service<tachimawari_interfaces::srv::GetJoints>::SharedPtr get_joints_server;

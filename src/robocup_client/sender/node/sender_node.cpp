@@ -35,8 +35,8 @@ namespace robocup_client
 namespace sender
 {
 
-SenderNode::SenderNode(rclcpp::Node::SharedPtr node, robocup_client::sender::Sender sender)
-: sender(sender)
+SenderNode::SenderNode(rclcpp::Node::SharedPtr node, robocup_client::robot_client::RobotClient robot_client)
+: robot_client(robot_client)
 {
   image_publisher = node->create_publisher<shisen_interfaces::msg::Image>(
     get_node_prefix() + "/image", 10););
@@ -53,7 +53,7 @@ std::string SenderNode::get_node_prefix() const
 void publish_image()
 {
   auto image_msg = shisen_interfaces::msg::Image();
-  auto image_webots = sender->get_camera_data();
+  auto image = robot_client->get_camera();
 
   // convert image_webots into image_msg
 
@@ -64,8 +64,8 @@ void publish_unit()
 {
   auto unit_msg = kansei_interfaces::msg::Unit();
 
-  auto gyro = sender->get_gyro_data();
-  auto accelero = sender->get_accelerometer_data();
+  auto gyro = robot_client->get_gyro();
+  auto accelero = robot_client->get_accelero();
 
   unit_msg.gyro = {static_cast<float>(gyro.value().x()), static_cast<float>(gyro.value().y()),
     static_cast<float>(gyro.value().z())};

@@ -35,12 +35,14 @@ class RobocupClientNode
 public:
   explicit RobocupClientNode(rclcpp::Node::SharedPtr node);
 
+  void set_robot_client(robocup_client::robot_client::RobotClient robot_client);
 private:
   rclcpp::Node::SharedPtr node;
   rclcpp::TimerBase::SharedPtr node_timer;
-  
-  robocup_client::robot_client::Sender sender;
-  robocup_client::robot_client::Receiver receiver;
+
+  robocup_client::robot_client::RobotClient robot_client;  
+  robocup_client::sender::SenderNode sender_node;
+  robocup_client::receiver::ReceiverNode receiver_node;
 };
 
 }  //  namespace robocup_client
