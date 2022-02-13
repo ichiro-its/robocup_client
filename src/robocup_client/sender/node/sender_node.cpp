@@ -53,9 +53,12 @@ std::string SenderNode::get_node_prefix() const
 void publish_image()
 {
   auto image_msg = shisen_interfaces::msg::Image();
-  auto image = robot_client->get_camera();
-
-  // convert image_webots into image_msg
+  std::shared_ptr<CameraMeasurement> camera = robot_client->get_camera();
+  
+  image_msg.rows = static_cast<int>(camera.height());
+  image_msg.cols = static_cast<int>(camera.width());
+  image_msg.quality = camera.quality();
+  image_msg.data = camera.image();
 
   image_publisher->publish(image_msg);
 }
