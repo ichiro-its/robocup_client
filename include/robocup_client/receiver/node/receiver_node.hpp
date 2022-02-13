@@ -18,10 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOT_CLIENT__RECEIVER_HPP_
-#define ROBOCUP_CLIENT__ROBOT_CLIENT__RECEIVER_HPP_
+#ifndef ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_NODE_HPP_
+#define ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_NODE_HPP_
 
 #include "robocup_client/communication/communication.hpp"
+#include "robocup_client/robot_client/robot_client.hpp"
+#include "tachimawari_interfaces/msg/set_joints.hpp"
+#include "tachimawari_interfaces/msg/joint.hpp"
+#include "robocup_client/receiver/node/receiver.hpp"
 
 #include <string>
 #include <memory>
@@ -31,23 +35,27 @@
 namespace robocup_client
 {
 
-namespace robot_client
+namespace receiver
 {
 
-class Receiver : public robocup_client::communication::Client
+class ReceiverNode
 {
 public:
-  explicit Receiver(
-    const std::string & host, const int & port,
-    std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket = std::make_shared<robocup_client::communication::TcpSocket>());
+  ReceiverNode(
+    rclcpp::Node::SharedPtr node, robocup_client::receiver::Receiver receiver);
+  
+  private:
+    std::string get_node_prefix() const;
 
-  bool connect();
-  void receive_data(char * buffer, int bytes);
-  std::shared_ptr<SensorMeasurements> receive();
+    std::shared_ptr<robocup_client::receiver::Receiver> receiver;
+    
+    rclcpp::Subscription<tachimawari_interfaces::msg::SetJoints>::SharedPtr set_joints_subscriber;
+
+    rclcpp::Service<tachimawari_interfaces::srv::GetJoints>::SharedPtr get_joints_server;
 };
 
-} // namespace robot_client
+} // namespace receiver
 
 }  // namespace robocup_client
 
-#endif  // ROBOCUP_CLIENT__ROBOT_CLIENT__RECEIVER_HPP_
+#endif  // ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_NODE_HPP_

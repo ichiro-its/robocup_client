@@ -40,5 +40,7 @@ RobocupClientNode::RobocupClientNode(rclcpp::Node::SharedPtr node)
       // update gyro, accelero, time, and image
     }
   );
+
+  
 }
 }

@@ -18,14 +18,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#ifndef ROBOCUP_CLIENT__SENDER__NODE__SENDER_NODE_HPP_
+#define ROBOCUP_CLIENT__SENDER__NODE__SENDER_NODE_HPP_
+
+#include "robocup_client/communication/communication.hpp"
+#include "robocup_client/robot_client/robot_client.hpp"
+#include "robocup_client/sender/node/sender.hpp"
+#include "shisen_interfaces/msg/image.hpp"
+#include "tachimawari_interfaces/srv/get_joints.hpp"
+#include "tachimawari_interfaces/msg/joint.hpp"
+#include "kansei_interfaces/msg/orientation.hpp"
+#include "kansei_interfaces/msg/unit.hpp"
+
+#include <string>
+#include <memory>
 
 #include "./messages.pb.h"
-#include "robocup_client/receiver/receiver.hpp"
-#include "robocup_client/sender/sender.hpp"
-#include "robocup_client/robot_client/robot_client.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
+#include <rclcpp/rclcpp.hpp>
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+namespace robocup_client
+{
+
+namespace sender
+{
+
+class SenderNode 
+{
+public:
+  SenderNode(rclcpp::Node::SharedPtr node, robocup_client::sender::Sender sender);
+
+private: 
+  std::string get_node_prefix() const;
+  
+  void publish_image();
+
+  void publish_orientation();
+
+  void publish_unit();
+
+  std::shared_ptr<Sender> sender;
+
+  rclcpp::Publisher<shisen_interfaces::msg::Image>::SharedPtr image_publisher;
+
+  rclcpp::Publisher<kansei_interfaces::msg::Unit>::SharedPtr unit_publisher;
+};
+
+} // namespace sender
+
+}  // namespace robocup_client
+
+#endif  // ROBOCUP_CLIENT__SENDER__NODE__SENDER_NODE_HPP_

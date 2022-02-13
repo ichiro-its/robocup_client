@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "robocup_client/robot_client/receiver.hpp"
+#include "robocup_client/sender/sender.hpp"
 
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
@@ -31,55 +31,54 @@
 namespace robocup_client
 {
 
-namespace robot_client
+namespace sender
 {
 
 const int max_answer_size = 1920 * 1080 * 3 + 1000;
 
-Receiver::Receiver(
-  const std::string & host, const int & port, std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket)
-: robocup_client::communication::Client(host, port, tcp_socket)
+Sender::Sender(rclcpp::Node::SharedPtr node, robocup_client::robot_client::RobotClient client, robocup_client::MessageHandler message)
+: robot_client(client), message(message)
 {
+  message.add_sensor_time_step("Camera", 16);
+  message.add_sensor_time_step("gyro", 8);
+  message.add_sensor_time_step("accelerometer", 8);
+
+  robot_client.send(*message.get_actuator_request());
 }
 
-bool Receiver::connect()
+std::shared_ptr<GyroMeasurement> get_gyro_data()
 {
-  robocup_client::communication::Client::connect();
+  auto sensors = robot_client.receive();
 
-  std::string response = receive_string(8);
-
-  return response.compare("Welcome") == 1;
-}
-
-void Receiver::receive_data(char * buffer, int bytes)
-{
-  int received = 0;
-  while (received < bytes) {
-    int n = receive_raw(buffer + received, bytes - received);
-    if (n == -1) {
-      disconnect();
-    }
-    received += n;
+  if (sensors.get()->gyros_size() > 0) {
+    auto gyro = sensors.get()->gyros(0);
+    return gyro;
   }
 }
 
-std::shared_ptr<SensorMeasurements> Receiver::receive()
+std::shared_ptr<AccelerometerMeasurement> get_accelerometer_data()
 {
-  uint32_t content_size_network = robocup_client::communication::Client::receive<uint32_t>().value_or(0);
-  const int answer_size = ntohl(content_size_network);
+  auto sensors = robot_client.receive();
 
-  if (answer_size > max_answer_size || answer_size == 0) {
-    disconnect();
+  if (sensors.get()->accelerometers_size() > 0) {
+    auto accelerometer = sensors.get()->accelerometers(0);
+    return accelerometer;
   }
-
-  SensorMeasurements sensor_measurements;
-  std::vector<char> buffer(answer_size);
-  receive_data(buffer.data(), answer_size);
-  sensor_measurements.ParseFromArray(buffer.data(), answer_size);
-
-  return std::make_shared<SensorMeasurements>(sensor_measurements);
 }
 
-}  // namespace robot_client
+std::shared_ptr<CameraMeasurement> get_camera_data()
+{
+  auto sensors = robot_client.receive();
+
+  if (sensors.get()->cameras_size() > 0) {
+    auto camera = sensors.get()->cameras(0);
+    std::cout << camera.name() << " " << camera.width() << " " << camera.height() << " " << camera.quality() << " " << sizeof(camera.image()) << std::endl;
+
+    return camera;
+  }
+}
+
+
+} // namespace sender
 
 }  // namespace robocup_client

@@ -18,10 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOT_CLIENT__SENDER_HPP_
-#define ROBOCUP_CLIENT__ROBOT_CLIENT__SENDER_HPP_
+#ifndef ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_HPP_
+#define ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_HPP_
 
 #include "robocup_client/communication/communication.hpp"
+#include "robocup_client/robot_client/robot_client.hpp"
+#include "tachimawari_interfaces/msg/set_joints.hpp"
+#include "tachimawari_interfaces/msg/joint.hpp"
+
 
 #include <string>
 #include <memory>
@@ -31,22 +35,24 @@
 namespace robocup_client
 {
 
-namespace robot_client
+namespace receiver
 {
 
-class Sender : public robocup_client::communication::Client
+class Receiver : public robocup_client::robot_client::RobotClient
 {
 public:
-  explicit Sender(
-    const std::string & host, const int & port,
-    std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket = std::make_shared<robocup_client::communication::TcpSocket>());
+  explicit Receiver(
+    rclcpp::Node::SharedPtr node, robocup_client::robot_client::RobotClient client, robocup_client::MessageHandler message);
 
-  bool connect();
-  int send(const ActuatorRequests & data);
+  private:
+    std::shared_ptr<PositionSensorMeasurement> get_positions_data();
+    void set_positions_by_joints(std::vector<tachimawari_interfaces::msg::Joint> joints);
+
+    robocup_client::robot_client::RobotClient robot_client;
 };
 
-} // namespace robot_client
+} // namespace receiver
 
 }  // namespace robocup_client
 
-#endif  // ROBOCUP_CLIENT__ROBOT_CLIENT__SENDER_HPP_
+#endif  // ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_HPP_

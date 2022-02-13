@@ -25,6 +25,7 @@
 #include <string>
 
 #include <rclcpp/rclcpp.hpp>
+#include "robocup_client/robocup_client.hpp"
 
 namespace robocup_client 
 {
@@ -37,7 +38,9 @@ public:
 private:
   rclcpp::Node::SharedPtr node;
   rclcpp::TimerBase::SharedPtr node_timer;
-
+  
+  robocup_client::robot_client::Sender sender;
+  robocup_client::robot_client::Receiver receiver;
 };
 
 }  //  namespace robocup_client

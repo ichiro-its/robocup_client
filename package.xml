@@ -11,6 +11,9 @@
   <depend>musen</depend>
   <depend>keisan</depend>
   <depend>rclcpp</depend>
+  <depend>shisen_interfaces</depend>
+  <depend>kansei_interfaces</depend>
+  <depend>tachimawari_interfaces</depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 

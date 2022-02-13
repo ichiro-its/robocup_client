@@ -18,15 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "robocup_client/robot_client/sender.hpp"
+#ifndef ROBOCUP_CLIENT__ROBOT_CLIENT__ROBOT_CLIENT_HPP_
+#define ROBOCUP_CLIENT__ROBOT_CLIENT__ROBOT_CLIENT_HPP_
 
-#include <google/protobuf/io/zero_copy_stream_impl.h>
-#include <google/protobuf/text_format.h>
-
-#include <memory>
 #include <string>
-#include <vector>
-#include <arpa/inet.h>
+#include <memory>
+
+#include "./messages.pb.h"
+#include "robocup_client/communication/communication.hpp"
 
 namespace robocup_client
 {
@@ -34,44 +33,20 @@ namespace robocup_client
 namespace robot_client
 {
 
-const int max_answer_size = 1920 * 1080 * 3 + 1000;
-
-Sender::Sender(
-  const std::string & host, const int & port, std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket)
-: robocup_client::communication::Client(host, port, tcp_socket)
+class RobotClient : public robocup_client::communication::Client
 {
-}
+public:
+  explicit RobotClient(
+    const std::string & host, const int & port, std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket = std::make_shared<robocup_client::communication::TcpSocket>());
 
-bool Sender::connect()
-{
-  robocup_client::communication::Client::connect();
-
-  std::string response = receive_string(8);
-
-  return response.compare("Welcome") == 1;
-}
-
-
-int Sender::send(const ActuatorRequests & data)
-{
-  uint32_t size = htonl(data.ByteSizeLong());
-
-  int sent = Client::send<uint32_t>(size);
-
-  if (sent == 0) {
-    disconnect();
-  }
-
-  google::protobuf::io::ZeroCopyOutputStream * zeroCopyStream =
-    new google::protobuf::io::FileOutputStream(get_tcp_socket()->get_sockfd());
-
-  data.SerializeToZeroCopyStream(zeroCopyStream);
-
-  delete zeroCopyStream;
-
-  return sent;
-}
+  bool connect();
+  void receive_data(char * buffer, int bytes);
+  int send(const ActuatorRequests & data);
+  std::shared_ptr<SensorMeasurements> receive();
+};
 
 } // namespace robot_client
 
 }  // namespace robocup_client
+
+#endif  // ROBOCUP_CLIENT__ROBOT_CLIENT__ROBOT_CLIENT_HPP_
