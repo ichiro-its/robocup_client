@@ -46,7 +46,8 @@ class ReceiverNode
 {
 public:
   explicit ReceiverNode(
-    rclcpp::Node::SharedPtr node, std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client);
+    rclcpp::Node::SharedPtr node,
+    std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client);
 
 private:
   std::string get_node_prefix() const;

@@ -45,7 +45,9 @@ namespace sender
 class SenderNode
 {
 public:
-  explicit SenderNode(rclcpp::Node::SharedPtr node, std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client);
+  explicit SenderNode(
+    rclcpp::Node::SharedPtr node,
+    std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client);
 
 private:
   std::string get_node_prefix() const;

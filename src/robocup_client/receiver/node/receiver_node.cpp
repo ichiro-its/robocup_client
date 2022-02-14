@@ -81,7 +81,7 @@ ReceiverNode::ReceiverNode(
                 joints_msgs[i].id = static_cast<int>(val);
               }
             }
-            
+
             joints_msgs[i].position = static_cast<float>(positions[i].value() * 180.0 / M_PI);
           }
 

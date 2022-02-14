@@ -61,7 +61,7 @@ void SenderNode::publish_image()
   image_msg.rows = static_cast<int>(camera.height());
   image_msg.cols = static_cast<int>(camera.width());
   image_msg.quality = camera.quality();
-  // image_msg.data = std::string(camera.image()).data();
+  image_msg.data = std::vector<uint8_t>(camera.image().begin(), camera.image().end());
 
   image_publisher->publish(image_msg);
 }
@@ -74,10 +74,12 @@ void SenderNode::publish_unit()
   auto accelero = robot_client->get_accelero();
 
   unit_msg.gyro = std::experimental::make_array(
-    static_cast<float>(gyro.value().x()), static_cast<float>(gyro.value().y()), static_cast<float>(gyro.value().z()));
+    static_cast<float>(gyro.value().x()), static_cast<float>(gyro.value().y()),
+    static_cast<float>(gyro.value().z()));
 
   unit_msg.accelero = std::experimental::make_array(
-    static_cast<float>(accelero.value().x()), static_cast<float>(accelero.value().y()), static_cast<float>(accelero.value().z()));
+    static_cast<float>(accelero.value().x()), static_cast<float>(accelero.value().y()),
+    static_cast<float>(accelero.value().z()));
 
   this->unit_publisher->publish(unit_msg);
 }

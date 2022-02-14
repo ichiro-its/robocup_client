@@ -37,7 +37,8 @@ namespace robot_client
 const int max_answer_size = 1920 * 1080 * 3 + 1000;
 
 RobotClient::RobotClient(
-  const std::string & host, const int & port, std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket,
+  const std::string & host, const int & port,
+  std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket,
   int time_step, int camera_time_step)
 : robocup_client::communication::Client(host, port, tcp_socket)
 {
