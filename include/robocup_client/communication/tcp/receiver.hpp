@@ -59,7 +59,7 @@ std::optional<T> Receiver::receive()
   return std::make_optional<T>(std::move(data));
 }
 
-} // namespace communication
+}  // namespace communication
 
 }  // namespace robocup_client
 

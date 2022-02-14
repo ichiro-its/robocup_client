@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "robocup_client/robocup_client.hpp"
-
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
 #include <unistd.h>
@@ -27,6 +25,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+
+#include "robocup_client/robocup_client.hpp"
 
 int main(int argc, char * argv[])
 {

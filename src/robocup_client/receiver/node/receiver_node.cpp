@@ -20,11 +20,11 @@
 
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
+#include <arpa/inet.h>
 
 #include <memory>
 #include <string>
 #include <vector>
-#include <arpa/inet.h>
 
 #include "rclcpp/rclcpp.hpp"
 
@@ -84,7 +84,6 @@ ReceiverNode::ReceiverNode(
 
             joints_msgs[i].position = static_cast<float>(positions[i].value() * 180.0 / M_PI);
           }
-
         }
       }
     );

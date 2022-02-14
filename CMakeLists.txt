@@ -38,16 +38,16 @@ add_library(${PROJECT_NAME} SHARED
   "src/${PROJECT_NAME}/robot_client/robot_client.cpp"
   "src/${PROJECT_NAME}/message_handler/message_handler.cpp"
   ${PROTO_SRC})
-  
+
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>)
 
 ament_target_dependencies(${PROJECT_NAME}
-  keisan 
-  Protobuf 
-  rclcpp 
+  keisan
+  Protobuf
+  rclcpp
   kansei_interfaces
   shisen_interfaces
   tachimawari
@@ -76,7 +76,7 @@ endif()
 
 ament_export_dependencies(
   kansei_interfaces
-  keisan 
+  keisan
   Protobuf
   rclcpp
   shisen_interfaces

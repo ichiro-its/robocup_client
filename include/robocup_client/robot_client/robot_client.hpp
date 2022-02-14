@@ -42,7 +42,8 @@ class RobotClient : public robocup_client::communication::Client
 public:
   explicit RobotClient(
     const std::string & host, const int & port,
-    std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket = std::make_shared<robocup_client::communication::TcpSocket>(),
+    std::shared_ptr<robocup_client::communication::TcpSocket>
+    tcp_socket = std::make_shared<robocup_client::communication::TcpSocket>(),
     int time_step = 8, int camera_time_step = 16);
 
   bool connect();

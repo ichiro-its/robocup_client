@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "robocup_client/robot_client/robot_client.hpp"
-
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
+#include <arpa/inet.h>
 
 #include <memory>
 #include <string>
 #include <vector>
-#include <arpa/inet.h>
+
+#include "robocup_client/robot_client/robot_client.hpp"
 
 namespace robocup_client
 {

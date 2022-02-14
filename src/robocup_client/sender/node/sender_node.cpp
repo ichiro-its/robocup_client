@@ -18,17 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "robocup_client/sender/sender.hpp"
-#include "./messages.pb.h"
-
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
+#include <arpa/inet.h>
 
 #include <experimental/array>
 #include <memory>
 #include <string>
 #include <vector>
-#include <arpa/inet.h>
+
+#include "robocup_client/sender/sender.hpp"
+#include "./messages.pb.h"
 
 namespace robocup_client
 {
