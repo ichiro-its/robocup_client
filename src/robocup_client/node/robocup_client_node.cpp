@@ -28,7 +28,7 @@
 
 using namespace std::chrono_literals;
 
-namespace robocup_client 
+namespace robocup_client
 {
 
 RobocupClientNode::RobocupClientNode(rclcpp::Node::SharedPtr node)
@@ -46,4 +46,4 @@ RobocupClientNode::RobocupClientNode(rclcpp::Node::SharedPtr node)
   sender_node = std::make_shared<robocup_client::sender::SenderNode>(node, robot_client);
 }
 
-}
+}  // namespace robocup_client

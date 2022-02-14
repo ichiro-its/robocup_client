@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "robocup_client/communication/communication.hpp"
-
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
@@ -28,12 +26,14 @@
 #include <memory>
 #include <string>
 
+#include "robocup_client/communication/communication.hpp"
+
 namespace robocup_client
 {
 
 namespace communication
 {
-  
+
 
 constexpr auto connect_socket = connect;
 constexpr auto socket_send = send;
@@ -120,6 +120,6 @@ const int & Client::get_port() const
   return port;
 }
 
-}
+}  // namespace communication
 
 }  // namespace robocup_client

@@ -18,16 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "robocup_client/communication/communication.hpp"
-
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include "robocup_client/communication/communication.hpp"
+
 namespace robocup_client
 {
 
-namespace communication 
+namespace communication
 {
 
 BaseSocket::BaseSocket()

@@ -24,25 +24,26 @@
 #include <memory>
 #include <string>
 
-#include <rclcpp/rclcpp.hpp>
+#include "rclcpp/rclcpp.hpp"
 #include "robocup_client/robocup_client.hpp"
 
-namespace robocup_client 
+namespace robocup_client
 {
 
-class RobocupClientNode 
+class RobocupClientNode
 {
 public:
   explicit RobocupClientNode(rclcpp::Node::SharedPtr node);
 
   void set_robot_client(robocup_client::robot_client::RobotClient robot_client);
+
 private:
   rclcpp::Node::SharedPtr node;
   rclcpp::TimerBase::SharedPtr node_timer;
 
-  robocup_client::robot_client::RobotClient robot_client;  
-  robocup_client::sender::SenderNode sender_node;
-  robocup_client::receiver::ReceiverNode receiver_node;
+  std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client;
+  std::shared_ptr<robocup_client::sender::SenderNode> sender_node;
+  std::shared_ptr<robocup_client::receiver::ReceiverNode> receiver_node;
 };
 
 }  //  namespace robocup_client

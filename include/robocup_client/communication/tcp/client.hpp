@@ -62,7 +62,7 @@ protected:
 };
 
 }  // namespace communication
- 
+
 }  // namespace robocup_client
 
 #endif  // ROBOCUP_CLIENT__COMMUNICATION__TCP__CLIENT_HPP_

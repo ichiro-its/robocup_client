@@ -37,11 +37,10 @@ int main(int argc, char * argv[])
   std::string host = argv[1];
   int port = std::stoi(argv[2]);
 
-  robocup_client::robot_client::Sender sender(host, port);
-  robocup_client::robot_client::Receiver receiver(host, port);
-  if (!sender.connect() && !receiver.connect()) {
+  robocup_client::robot_client::RobotClient client(host, port);
+  if (!client.connect()) {
     std::cerr << "Failed to connect to server on port " <<
-      sender.get_port() << "!" << std::endl;
+      client.get_port() << "!" << std::endl;
 
     return 1;
   }
@@ -59,13 +58,13 @@ int main(int argc, char * argv[])
   message.add_sensor_time_step("left_knee_s", 8);
   message.add_sensor_time_step("right_knee_s", 8);
 
-  sender.send(*message.get_actuator_request());
+  client.send(*message.get_actuator_request());
 
-  while (sender.get_tcp_socket()->is_connected() && receiver.get_tcp_socket()->is_connected()) {
+  while (client.get_tcp_socket()->is_connected()) {
     try {
       message.clear_actuator_request();
 
-      auto sensors = receiver.receive();
+      auto sensors = client.receive();
 
       // Get Gyro Data
       if (sensors.get()->gyros_size() > 0) {

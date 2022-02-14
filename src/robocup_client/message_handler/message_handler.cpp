@@ -108,6 +108,6 @@ std::shared_ptr<ActuatorRequests> MessageHandler::get_actuator_request()
   return actuator_request;
 }
 
-} // namespace message_handler
+}  // namespace message_handler
 
 }  // namespace robocup_client

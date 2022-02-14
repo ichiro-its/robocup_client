@@ -16,11 +16,11 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(kansei_interfaces REQUIRED)
 find_package(keisan REQUIRED)
-find_package(musen REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(shisen_interfaces REQUIRED)
 find_package(tachimawari_interfaces REQUIRED)
+find_package(tachimawari REQUIRED)
 
 include_directories(${PROTOBUF_INCLUDE_DIR})
 protobuf_generate_cpp(PROTO_SRC PROTO_HEADER include/robocup_client/messages.proto)
@@ -33,9 +33,7 @@ add_library(${PROJECT_NAME} SHARED
   "src/${PROJECT_NAME}/communication/socket/base_socket.cpp"
   "src/${PROJECT_NAME}/communication/socket/tcp_socket.cpp"
   "src/${PROJECT_NAME}/node/robocup_client_node.cpp"
-  "src/${PROJECT_NAME}/receiver/node/receiver.cpp"
   "src/${PROJECT_NAME}/receiver/node/receiver_node.cpp"
-  "src/${PROJECT_NAME}/sender/node/sender.cpp"
   "src/${PROJECT_NAME}/sender/node/sender_node.cpp"
   "src/${PROJECT_NAME}/robot_client/robot_client.cpp"
   "src/${PROJECT_NAME}/message_handler/message_handler.cpp"
@@ -47,7 +45,13 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>)
 
 ament_target_dependencies(${PROJECT_NAME}
-  keisan musen Protobuf rclcpp)
+  keisan 
+  Protobuf 
+  rclcpp 
+  kansei_interfaces
+  shisen_interfaces
+  tachimawari
+  tachimawari_interfaces)
 
 install(DIRECTORY "include" DESTINATION ".")
 
@@ -73,10 +77,10 @@ endif()
 ament_export_dependencies(
   kansei_interfaces
   keisan 
-  musen 
   Protobuf
   rclcpp
   shisen_interfaces
+  tachimawari
   tachimawari_interfaces)
 ament_export_include_directories("include")
 ament_export_libraries(${PROJECT_NAME})

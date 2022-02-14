@@ -24,6 +24,7 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
 
+#include <experimental/array>
 #include <memory>
 #include <string>
 #include <vector>
@@ -35,49 +36,52 @@ namespace robocup_client
 namespace sender
 {
 
-SenderNode::SenderNode(rclcpp::Node::SharedPtr node, robocup_client::robot_client::RobotClient robot_client)
+SenderNode::SenderNode(
+  rclcpp::Node::SharedPtr node,
+  std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client)
 : robot_client(robot_client)
 {
   image_publisher = node->create_publisher<shisen_interfaces::msg::Image>(
-    get_node_prefix() + "/image", 10););
+    get_node_prefix() + "/image", 10);
 
   unit_publisher = node->create_publisher<kansei_interfaces::msg::Unit>(
     get_node_prefix() + "/unit", 10);
 }
 
-std::string SenderNode::get_node_prefix() const 
+std::string SenderNode::get_node_prefix() const
 {
   return "sender";
 }
 
-void publish_image()
+void SenderNode::publish_image()
 {
   auto image_msg = shisen_interfaces::msg::Image();
-  std::shared_ptr<CameraMeasurement> camera = robot_client->get_camera();
-  
+  auto camera = robot_client->get_camera();
+
   image_msg.rows = static_cast<int>(camera.height());
   image_msg.cols = static_cast<int>(camera.width());
   image_msg.quality = camera.quality();
-  image_msg.data = camera.image();
+  // image_msg.data = std::string(camera.image()).data();
 
   image_publisher->publish(image_msg);
 }
 
-void publish_unit()
+void SenderNode::publish_unit()
 {
   auto unit_msg = kansei_interfaces::msg::Unit();
 
   auto gyro = robot_client->get_gyro();
   auto accelero = robot_client->get_accelero();
 
-  unit_msg.gyro = {static_cast<float>(gyro.value().x()), static_cast<float>(gyro.value().y()),
-    static_cast<float>(gyro.value().z())};
-  unit_msg.accelero = {static_cast<float>(accelerometer.value().x()), static_cast<float>(accelerometer.value().y()),
-    static_cast<float>(accelerometer.value().z())};
+  unit_msg.gyro = std::experimental::make_array(
+    static_cast<float>(gyro.value().x()), static_cast<float>(gyro.value().y()), static_cast<float>(gyro.value().z()));
 
-  unit_publisher->publish(unit_msg);
+  unit_msg.accelero = std::experimental::make_array(
+    static_cast<float>(accelero.value().x()), static_cast<float>(accelero.value().y()), static_cast<float>(accelero.value().z()));
+
+  this->unit_publisher->publish(unit_msg);
 }
 
-} // namespace sender
+}  // namespace sender
 
 }  // namespace robocup_client

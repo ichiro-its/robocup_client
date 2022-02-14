@@ -21,14 +21,18 @@
 #ifndef ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_NODE_HPP_
 #define ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_NODE_HPP_
 
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/robot_client/robot_client.hpp"
-#include "tachimawari_interfaces/msg/set_joints.hpp"
-#include "tachimawari_interfaces/msg/joint.hpp"
-#include "robocup_client/receiver/node/receiver.hpp"
-
 #include <string>
 #include <memory>
+
+#include "rclcpp/rclcpp.hpp"
+
+#include "robocup_client/communication/communication.hpp"
+#include "robocup_client/robot_client/robot_client.hpp"
+
+#include "tachimawari_interfaces/srv/get_joints.hpp"
+#include "tachimawari_interfaces/msg/set_joints.hpp"
+#include "tachimawari/joint/model/joint.hpp"
+#include "tachimawari/joint/model/joint_id.hpp"
 
 #include "./messages.pb.h"
 
@@ -41,18 +45,20 @@ namespace receiver
 class ReceiverNode
 {
 public:
-  ReceiverNode(
-    rclcpp::Node::SharedPtr node, robocup_client::robot_client::RobotClient robot_client);
-  
-  private:
-    std::string get_node_prefix() const;
+  explicit ReceiverNode(
+    rclcpp::Node::SharedPtr node, std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client);
 
-    rclcpp::Subscription<tachimawari_interfaces::msg::SetJoints>::SharedPtr set_joints_subscriber;
+private:
+  std::string get_node_prefix() const;
 
-    rclcpp::Service<tachimawari_interfaces::srv::GetJoints>::SharedPtr get_joints_server;
+  std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client;
+
+  rclcpp::Subscription<tachimawari_interfaces::msg::SetJoints>::SharedPtr set_joints_subscriber;
+
+  rclcpp::Service<tachimawari_interfaces::srv::GetJoints>::SharedPtr get_joints_server;
 };
 
-} // namespace receiver
+}  // namespace receiver
 
 }  // namespace robocup_client
 

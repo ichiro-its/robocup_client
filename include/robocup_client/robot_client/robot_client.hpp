@@ -23,9 +23,13 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "./messages.pb.h"
-#include "robocup_client/robocup_client.hpp"
+#include "robocup_client/communication/communication.hpp"
+#include "robocup_client/message_handler/message_handler.hpp"
+#include "tachimawari/joint/model/joint.hpp"
+#include "tachimawari/joint/model/joint_id.hpp"
 
 namespace robocup_client
 {
@@ -37,7 +41,9 @@ class RobotClient : public robocup_client::communication::Client
 {
 public:
   explicit RobotClient(
-    const std::string & host, const int & port, std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket = std::make_shared<robocup_client::communication::TcpSocket>());
+    const std::string & host, const int & port,
+    std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket = std::make_shared<robocup_client::communication::TcpSocket>(),
+    int time_step = 8, int camera_time_step = 16);
 
   bool connect();
   void receive_data(char * buffer, int bytes);
@@ -45,23 +51,23 @@ public:
   std::shared_ptr<SensorMeasurements> receive();
 
   void update_sensors();
-  void set_positions(std::vector<tachimawari_interfaces::msg::Joint> joints);
+  void set_positions(std::vector<tachimawari::joint::Joint> joints);
 
-  std::shared_ptr<std::vector<PositionSensorMeasurement>> get_positions();
-  std::shared_ptr<AccelerometerMeasurement> get_accelero();
-  std::shared_ptr<CameraMeasurement> get_camera();
-  std::shared_ptr<GyroMeasurement> get_gyro();
+  std::vector<PositionSensorMeasurement> get_positions();
+  AccelerometerMeasurement get_accelero();
+  CameraMeasurement get_camera();
+  GyroMeasurement get_gyro();
 
 private:
-  std::shared_ptr<AccelerometerMeasurement> current_accelero;
-  std::shared_ptr<CameraMeasurement> current_camera;
-  std::shared_ptr<GyroMeasurement> current_gyro;
-  std::shared_ptr<std::vector<PositionSensorMeasurement>> current_positions;
-  
-  robocup_client::message_handler::MessageHandler message;
+  AccelerometerMeasurement current_accelero;
+  CameraMeasurement current_camera;
+  GyroMeasurement current_gyro;
+  std::vector<PositionSensorMeasurement> current_positions;
+
+  std::shared_ptr<robocup_client::message_handler::MessageHandler> message;
 };
 
-} // namespace robot_client
+}  // namespace robot_client
 
 }  // namespace robocup_client
 

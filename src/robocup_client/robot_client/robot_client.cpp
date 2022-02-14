@@ -36,34 +36,36 @@ namespace robot_client
 
 const int max_answer_size = 1920 * 1080 * 3 + 1000;
 
-RobotClient::RobotClient(const std::string & host, const int & port, std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket)
+RobotClient::RobotClient(
+  const std::string & host, const int & port, std::shared_ptr<robocup_client::communication::TcpSocket> tcp_socket,
+  int time_step, int camera_time_step)
 : robocup_client::communication::Client(host, port, tcp_socket)
 {
-  message.add_sensor_time_step("neck_yaw_s", 8);
-  message.add_sensor_time_step("neck_pitch_s", 8);
-  message.add_sensor_time_step("left_shoulder_pitch_s", 8);
-  message.add_sensor_time_step("left_shoulder_roll_s", 8);
-  message.add_sensor_time_step("left_elbow_s", 8);
-  message.add_sensor_time_step("right_shoulder_pitch_s", 8);
-  message.add_sensor_time_step("right_shoulder_roll_s", 8);
-  message.add_sensor_time_step("right_elbow_s", 8);
-  message.add_sensor_time_step("left_hip_yaw_s", 8);
-  message.add_sensor_time_step("left_hip_roll_s", 8);
-  message.add_sensor_time_step("left_hip_pitch_s", 8);
-  message.add_sensor_time_step("left_knee_s", 8);
-  message.add_sensor_time_step("left_ankle_roll_s", 8);
-  message.add_sensor_time_step("left_ankle_pitch_s", 8);
-  message.add_sensor_time_step("right_hip_yaw_s", 8);
-  message.add_sensor_time_step("right_hip_roll_s", 8);
-  message.add_sensor_time_step("right_hip_pitch_s", 8);
-  message.add_sensor_time_step("right_knee_s", 8);
-  message.add_sensor_time_step("right_ankle_roll_s", 8);
-  message.add_sensor_time_step("right_ankle_pitch_s", 8);
-  message.add_sensor_time_step("Camera", 16);
-  message.add_sensor_time_step("gyro", 8);
-  message.add_sensor_time_step("accelerometer", 8);
+  message->add_sensor_time_step("neck_yaw_s", time_step);
+  message->add_sensor_time_step("neck_pitch_s", time_step);
+  message->add_sensor_time_step("left_shoulder_pitch_s", time_step);
+  message->add_sensor_time_step("left_shoulder_roll_s", time_step);
+  message->add_sensor_time_step("left_elbow_s", time_step);
+  message->add_sensor_time_step("right_shoulder_pitch_s", time_step);
+  message->add_sensor_time_step("right_shoulder_roll_s", time_step);
+  message->add_sensor_time_step("right_elbow_s", time_step);
+  message->add_sensor_time_step("left_hip_yaw_s", time_step);
+  message->add_sensor_time_step("left_hip_roll_s", time_step);
+  message->add_sensor_time_step("left_hip_pitch_s", time_step);
+  message->add_sensor_time_step("left_knee_s", time_step);
+  message->add_sensor_time_step("left_ankle_roll_s", time_step);
+  message->add_sensor_time_step("left_ankle_pitch_s", time_step);
+  message->add_sensor_time_step("right_hip_yaw_s", time_step);
+  message->add_sensor_time_step("right_hip_roll_s", time_step);
+  message->add_sensor_time_step("right_hip_pitch_s", time_step);
+  message->add_sensor_time_step("right_knee_s", time_step);
+  message->add_sensor_time_step("right_ankle_roll_s", time_step);
+  message->add_sensor_time_step("right_ankle_pitch_s", time_step);
+  message->add_sensor_time_step("Camera", camera_time_step);
+  message->add_sensor_time_step("gyro", time_step);
+  message->add_sensor_time_step("accelerometer", time_step);
 
-  send(*message.get_actuator_request());
+  send(*message->get_actuator_request());
 }
 
 bool RobotClient::connect()
@@ -89,7 +91,8 @@ void RobotClient::receive_data(char * buffer, int bytes)
 
 std::shared_ptr<SensorMeasurements> RobotClient::receive()
 {
-  uint32_t content_size_network = robocup_client::communication::Client::receive<uint32_t>().value_or(0);
+  uint32_t content_size_network =
+    robocup_client::communication::Client::receive<uint32_t>().value_or(0);
   const int answer_size = ntohl(content_size_network);
 
   if (answer_size > max_answer_size || answer_size == 0) {
@@ -126,66 +129,73 @@ int RobotClient::send(const ActuatorRequests & data)
 
 void RobotClient::update_sensors()
 {
-  message.clear_actuator_request();
+  message->clear_actuator_request();
 
-  auto sensors = receiver.receive();
+  auto sensors = this->receive();
 
-  if (sensors->get()->gyros_size() > 0) {
-    current_gyro = sensors.get()->gyros(0);
+  if (sensors->gyros_size() > 0) {
+    current_gyro = sensors->gyros(0);
   }
 
-  if (sensors->get()->accelerometers_size() > 0) {
-    current_accelero = sensors.get()->accelerometers(0);
+  if (sensors->accelerometers_size() > 0) {
+    current_accelero = sensors->accelerometers(0);
   }
 
-  if (sensors->get()->cameras_size() > 0) {
-    current_camera = sensors.get()->cameras(0);
+  if (sensors->cameras_size() > 0) {
+    current_camera = sensors->cameras(0);
   }
 
   current_positions.clear();
-  for (int i = 0; i < sensors.get()->position_sensors_size(); i++) {
-    auto position = sensors.get()->position_sensors(i);
+  for (int i = 0; i < sensors->position_sensors_size(); i++) {
+    auto position = sensors->position_sensors(i);
 
     current_positions.push_back(position);
   }
 }
 
-void RobotClient::set_positions(std::vector<tachimawari_interfaces::msg::Joint> joints)
+void RobotClient::set_positions(std::vector<tachimawari::joint::Joint> joints)
 {
-  message.clear_actuator_request();
+  message->clear_actuator_request();
 
-  for (auto joint : joints) {
-    std::string joint_name = joint.get_joint_name();
-    float position = joint.get_goal_position();
+  for (const auto & joint : joints) {
+    std::string joint_name;
+
+    for (const auto & [key, val] : tachimawari::joint::JointId::by_name) {
+      if (val == joint.get_id()) {
+        joint_name = key;
+      }
+    }
+
+    float position = joint.get_position();
 
     if (joint_name.find("shoulder_pitch") != std::string::npos) {
       joint_name += " [shoulder]";
     } else if (joint_name.find("hip_yaw") != std::string::npos) {
-      joint_name += " [hip]", joint.get_goal_position();
+      joint_name += " [hip]";
     }
 
-    message.add_motor_position_in_degree(joint_name, position);
+    message->add_motor_position_in_degree(joint_name, position);
   }
-  
-  send(*message.get_actuator_request());
+
+  send(*message->get_actuator_request());
 }
 
-std::shared_ptr<std::vector<PositionSensorMeasurement>> get_positions()
+std::vector<PositionSensorMeasurement> RobotClient::get_positions()
 {
   return current_positions;
 }
 
-std::shared_ptr<AccelerometerMeasurement> RobotClient::get_accelero()
+AccelerometerMeasurement RobotClient::get_accelero()
 {
   return current_accelero;
 }
 
-std::shared_ptr<CameraMeasurement> RobotClient::get_camera()
+CameraMeasurement RobotClient::get_camera()
 {
   return current_camera;
 }
 
-std::shared_ptr<GyroMeasurement> RobotClient::get_gyro()
+GyroMeasurement RobotClient::get_gyro()
 {
   return current_gyro;
 }

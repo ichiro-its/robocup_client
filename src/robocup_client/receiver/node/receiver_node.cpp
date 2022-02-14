@@ -18,9 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "robocup_client/receiver/receiver.hpp"
-#include "robocup_client/robot_client/robot_client.hpp"
-
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
 
@@ -29,26 +26,37 @@
 #include <vector>
 #include <arpa/inet.h>
 
+#include "rclcpp/rclcpp.hpp"
+
+#include "robocup_client/receiver/receiver.hpp"
+#include "robocup_client/robot_client/robot_client.hpp"
+
 namespace robocup_client
 {
 
 namespace receiver
 {
 
-ReceiverNode::ReceiverNode(rclcpp::Node::SharedPtr node, robocup_client::robot_client::RobotClient robot_client)
+ReceiverNode::ReceiverNode(
+  rclcpp::Node::SharedPtr node,
+  std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client)
 : robot_client(robot_client)
 {
   // joints to positions
-  set_joint_subscriber = node->create_subscription<tachimawari_interfaces::msg::SetJoints>(
-    get_node_prefix() + "/set_joints", 10, 
+  set_joints_subscriber = node->create_subscription<tachimawari_interfaces::msg::SetJoints>(
+    get_node_prefix() + "/set_joints", 10,
     [this](const tachimawari_interfaces::msg::SetJoints::SharedPtr message) {
-      std::vector<tachimawari_interfaces::msg::Joint> joints;
+      {
+        using tachimawari::joint::Joint;
 
-      for (const auto & joint : message->joints) {
-        joints.push_back(Joint(joint.id, joint.position));
+        std::vector<Joint> joints;
+
+        for (const auto & joint : message->joints) {
+          joints.push_back(Joint(joint.id, joint.position));
+        }
+
+        this->robot_client->set_positions(joints);
       }
-
-      robot_client->set_positions(joints);  
     }
   );
 
@@ -59,22 +67,24 @@ ReceiverNode::ReceiverNode(rclcpp::Node::SharedPtr node, robocup_client::robot_c
     get_joints_server = node->create_service<tachimawari_interfaces::srv::GetJoints>(
       get_node_prefix() + "/get_joints",
       [this](std::shared_ptr<GetJoints::Request> request,
-      std::shared_ptr<GetJoints::Respones> response) {
+      std::shared_ptr<GetJoints::Response> response) {
         {
           using tachimawari_interfaces::msg::Joint;
 
-          std::vector<tachimawari_interfaces::msg::Joint> joints;
-          auto position_sensors = robot_client->get_positions();
-
-          for (auto position_sensor : position_sensors) {
-            auto joint_name = position_sensor.name().substr(0, position_sensor.name().size() - 2);
-
-            tachimawari_interfaces::msg::Joint joint(joint_name, position_sensor.value() * 180.0 / M_PI);
-
-            joints.push_back(joint);
+          auto positions = this->robot_client->get_positions();
+          auto & joints_msgs = response->joints;
+          joints_msgs.resize(positions.size());
+          for (size_t i = 0; i < joints_msgs.size() && i < positions.size(); ++i) {
+            auto joint_name = positions[i].name().substr(0, positions[0].name().size() - 2);
+            for (const auto & [key, val] : tachimawari::joint::JointId::by_name) {
+              if (key == joint_name) {
+                joints_msgs[i].id = static_cast<int>(val);
+              }
+            }
+            
+            joints_msgs[i].position = static_cast<float>(positions[i].value() * 180.0 / M_PI);
           }
 
-          response->joints = joints;
         }
       }
     );

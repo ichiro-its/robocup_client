@@ -21,6 +21,6 @@
 #ifndef ROBOCUP_CLIENT__SENDER__SENDER_HPP_
 #define ROBOCUP_CLIENT__SENDER__SENDER_HPP_
 
-#include "robocup_client/sender/node/sender.hpp"
+#include "robocup_client/sender/node/sender_node.hpp"
 
 #endif  // ROBOCUP_CLIENT__SENDER__SENDER_HPP_

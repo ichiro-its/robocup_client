@@ -21,20 +21,20 @@
 #ifndef ROBOCUP_CLIENT__SENDER__NODE__SENDER_NODE_HPP_
 #define ROBOCUP_CLIENT__SENDER__NODE__SENDER_NODE_HPP_
 
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/robot_client/robot_client.hpp"
-#include "robocup_client/sender/node/sender.hpp"
-#include "shisen_interfaces/msg/image.hpp"
-#include "tachimawari_interfaces/srv/get_joints.hpp"
-#include "tachimawari_interfaces/msg/joint.hpp"
-#include "kansei_interfaces/msg/orientation.hpp"
-#include "kansei_interfaces/msg/unit.hpp"
-
 #include <string>
 #include <memory>
 
+#include "kansei_interfaces/msg/orientation.hpp"
+#include "kansei_interfaces/msg/unit.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "robocup_client/communication/communication.hpp"
+#include "robocup_client/robot_client/robot_client.hpp"
+#include "shisen_interfaces/msg/image.hpp"
+#include "tachimawari_interfaces/srv/get_joints.hpp"
+#include "tachimawari_interfaces/msg/set_joints.hpp"
+#include "tachimawari_interfaces/msg/joint.hpp"
+
 #include "./messages.pb.h"
-#include <rclcpp/rclcpp.hpp>
 
 namespace robocup_client
 {
@@ -42,24 +42,26 @@ namespace robocup_client
 namespace sender
 {
 
-class SenderNode 
+class SenderNode
 {
 public:
-  SenderNode(rclcpp::Node::SharedPtr node, robocup_client::robot_client::RobotClient robot_client);
+  explicit SenderNode(rclcpp::Node::SharedPtr node, std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client);
 
-private: 
+private:
   std::string get_node_prefix() const;
-  
+
   void publish_image();
 
   void publish_unit();
+
+  std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client;
 
   rclcpp::Publisher<shisen_interfaces::msg::Image>::SharedPtr image_publisher;
 
   rclcpp::Publisher<kansei_interfaces::msg::Unit>::SharedPtr unit_publisher;
 };
 
-} // namespace sender
+}  // namespace sender
 
 }  // namespace robocup_client
 
