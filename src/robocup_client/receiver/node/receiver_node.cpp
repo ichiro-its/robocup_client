@@ -83,7 +83,7 @@ ReceiverNode::ReceiverNode(
               }
             }
 
-            joints_msgs[i].position =  keisan::make_radian(positions[i].value()).degree();
+            joints_msgs[i].position = keisan::make_radian(positions[i].value()).degree();
           }
         }
       }

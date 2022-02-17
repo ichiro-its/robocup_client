@@ -22,7 +22,6 @@
 #include <google/protobuf/text_format.h>
 #include <arpa/inet.h>
 
-#include <experimental/array>
 #include <memory>
 #include <string>
 #include <vector>
@@ -73,13 +72,12 @@ void SenderNode::publish_unit()
   auto gyro = robot_client->get_gyro();
   auto accelero = robot_client->get_accelero();
 
-  unit_msg.gyro = std::experimental::make_array(
-    static_cast<float>(gyro.value().x()), static_cast<float>(gyro.value().y()),
-    static_cast<float>(gyro.value().z()));
+  unit_msg.gyro = {static_cast<float>(gyro.value().x()), static_cast<float>(gyro.value().y()),
+    static_cast<float>(gyro.value().z())};
 
-  unit_msg.accelero = std::experimental::make_array(
-    static_cast<float>(accelero.value().x()), static_cast<float>(accelero.value().y()),
-    static_cast<float>(accelero.value().z()));
+  unit_msg.accelero =
+  {static_cast<float>(accelero.value().x()), static_cast<float>(accelero.value().y()),
+    static_cast<float>(accelero.value().z())};
 
   this->unit_publisher->publish(unit_msg);
 }
