@@ -36,7 +36,7 @@ public:
   virtual bool connect();
   virtual bool disconnect();
 
-  const int & get_sockfd() const;
+  int get_sockfd() const;
 
   bool is_connected() const;
 

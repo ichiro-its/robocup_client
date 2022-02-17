@@ -58,7 +58,7 @@ bool BaseSocket::disconnect()
   return true;
 }
 
-const int & BaseSocket::get_sockfd() const
+int BaseSocket::get_sockfd() const
 {
   return sockfd;
 }

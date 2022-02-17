@@ -18,11 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <keisan/keisan.hpp>
-#include <robocup_client/robocup_client.hpp>
 #include <memory>
 #include <string>
 #include <iostream>
+
+#include "keisan/keisan.hpp"
+#include "robocup_client/robocup_client.hpp"
 
 namespace robocup_client
 {
@@ -39,7 +40,7 @@ void MessageHandler::add_motor_position_in_degree(std::string name, double posit
 {
   auto motor_position = actuator_request->add_motor_positions();
   motor_position->set_name(name);
-  motor_position->set_position(position * M_PI / 180.0);
+  motor_position->set_position(keisan::make_degree(position).radian());
 }
 
 void MessageHandler::add_motor_position_in_radian(std::string name, double position)

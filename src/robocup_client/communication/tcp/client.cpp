@@ -115,7 +115,7 @@ const std::string & Client::get_host() const
   return host;
 }
 
-const int & Client::get_port() const
+int Client::get_port() const
 {
   return port;
 }

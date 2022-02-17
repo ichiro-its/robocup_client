@@ -52,7 +52,7 @@ public:
   bool is_connected() const;
 
   const std::string & get_host() const;
-  const int & get_port() const;
+  int get_port() const;
 
 protected:
   std::shared_ptr<TcpSocket> tcp_socket;

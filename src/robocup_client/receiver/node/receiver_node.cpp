@@ -26,6 +26,7 @@
 #include <string>
 #include <vector>
 
+#include "keisan/keisan.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 #include "robocup_client/receiver/receiver.hpp"
@@ -78,11 +79,11 @@ ReceiverNode::ReceiverNode(
             auto joint_name = positions[i].name().substr(0, positions[0].name().size() - 2);
             for (const auto & [key, val] : tachimawari::joint::JointId::by_name) {
               if (key == joint_name) {
-                joints_msgs[i].id = static_cast<int>(val);
+                joints_msgs[i].id = val;
               }
             }
 
-            joints_msgs[i].position = static_cast<float>(positions[i].value() * 180.0 / M_PI);
+            joints_msgs[i].position =  keisan::make_radian(positions[i].value()).degree();
           }
         }
       }
