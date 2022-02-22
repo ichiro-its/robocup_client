@@ -35,7 +35,7 @@ class RobocupClientNode
 public:
   explicit RobocupClientNode(rclcpp::Node::SharedPtr node);
 
-  void set_robot_client(robocup_client::robot_client::RobotClient robot_client);
+  void set_robot_client(std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client);
 
 private:
   rclcpp::Node::SharedPtr node;

@@ -46,4 +46,9 @@ RobocupClientNode::RobocupClientNode(rclcpp::Node::SharedPtr node)
   sender_node = std::make_shared<robocup_client::sender::SenderNode>(node, robot_client);
 }
 
+void RobocupClientNode::set_robot_client(std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client)
+{
+  this->robot_client = robot_client;
+}
+
 }  // namespace robocup_client
