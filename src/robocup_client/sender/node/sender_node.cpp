@@ -57,8 +57,8 @@ void SenderNode::publish_image()
   auto image_msg = shisen_interfaces::msg::Image();
   auto camera = robot_client->get_camera();
 
-  image_msg.rows = static_cast<int>(camera.height());
-  image_msg.cols = static_cast<int>(camera.width());
+  image_msg.rows = camera.height();
+  image_msg.cols = camera.width();
   image_msg.quality = camera.quality();
   image_msg.data = std::vector<uint8_t>(camera.image().begin(), camera.image().end());
 
