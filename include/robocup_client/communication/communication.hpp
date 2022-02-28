@@ -18,38 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__MESSAGE_HANDLER_HPP_
-#define ROBOCUP_CLIENT__MESSAGE_HANDLER_HPP_
+#ifndef ROBOCUP_CLIENT__COMMUNICATION__COMMUNICATION_HPP_
+#define ROBOCUP_CLIENT__COMMUNICATION__COMMUNICATION_HPP_
 
-#include <memory>
-#include <string>
-#include "./messages.pb.h"
-
-namespace robocup_client
-{
-
-class MessageHandler
-{
-public:
-  MessageHandler();
-
-  void add_motor_position_in_degree(std::string name, double position);
-  void add_motor_position_in_radian(std::string name, double position);
-  void add_motor_velocity(std::string name, double velocity);
-  void add_motor_force(std::string name, double force);
-  void add_motor_torque(std::string name, double torque);
-  void add_motor_pid(std::string name, Vector3 pid);
-  void add_sensor_time_step(std::string name, uint32_t timeStep);
-  void add_camera_quality(std::string name, double quality);
-  void add_camera_exposure(std::string name, double exposure);
-  void clear_actuator_request();
-
-  std::shared_ptr<ActuatorRequests> get_actuator_request();
-
-private:
-  std::shared_ptr<ActuatorRequests> actuator_request;
-};
-
-}  // namespace robocup_client
-
-#endif  // ROBOCUP_CLIENT__MESSAGE_HANDLER_HPP_
+#include "robocup_client/communication/socket/base_socket.hpp"
+#include "robocup_client/communication/socket/tcp_socket.hpp"
+#include "robocup_client/communication/tcp/client.hpp"
+#include "robocup_client/communication/tcp/receiver.hpp"
+#include "robocup_client/communication/tcp/sender.hpp"
+#endif  // ROBOCUP_CLIENT__COMMUNICATION__COMMUNICATION_HPP_

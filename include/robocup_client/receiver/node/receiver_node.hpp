@@ -18,14 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#ifndef ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_NODE_HPP_
+#define ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_NODE_HPP_
+
+#include <string>
+#include <memory>
+
+#include "rclcpp/rclcpp.hpp"
+
+#include "robocup_client/communication/communication.hpp"
+#include "robocup_client/robot_client/robot_client.hpp"
+
+#include "tachimawari_interfaces/srv/get_joints.hpp"
+#include "tachimawari_interfaces/msg/set_joints.hpp"
+#include "tachimawari/joint/model/joint.hpp"
+#include "tachimawari/joint/model/joint_id.hpp"
 
 #include "./messages.pb.h"
-#include "robocup_client/receiver/receiver.hpp"
-#include "robocup_client/sender/sender.hpp"
-#include "robocup_client/robot_client/robot_client.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+namespace robocup_client
+{
+
+namespace receiver
+{
+
+class ReceiverNode
+{
+public:
+  explicit ReceiverNode(
+    rclcpp::Node::SharedPtr node,
+    std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client);
+
+private:
+  std::string get_node_prefix() const;
+
+  std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client;
+
+  rclcpp::Subscription<tachimawari_interfaces::msg::SetJoints>::SharedPtr set_joints_subscriber;
+
+  rclcpp::Service<tachimawari_interfaces::srv::GetJoints>::SharedPtr get_joints_server;
+};
+
+}  // namespace receiver
+
+}  // namespace robocup_client
+
+#endif  // ROBOCUP_CLIENT__RECEIVER__NODE__RECEIVER_NODE_HPP_

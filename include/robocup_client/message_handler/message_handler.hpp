@@ -18,14 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#ifndef ROBOCUP_CLIENT__MESSAGE_HANDLER__MESSAGE_HANDLER_HPP_
+#define ROBOCUP_CLIENT__MESSAGE_HANDLER__MESSAGE_HANDLER_HPP_
 
+#include <memory>
+#include <string>
 #include "./messages.pb.h"
-#include "robocup_client/receiver/receiver.hpp"
-#include "robocup_client/sender/sender.hpp"
-#include "robocup_client/robot_client/robot_client.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+namespace robocup_client
+{
+
+namespace message_handler
+{
+
+class MessageHandler
+{
+public:
+  MessageHandler();
+
+  void add_motor_position_in_degree(std::string name, double position);
+  void add_motor_position_in_radian(std::string name, double position);
+  void add_motor_velocity(std::string name, double velocity);
+  void add_motor_force(std::string name, double force);
+  void add_motor_torque(std::string name, double torque);
+  void add_motor_pid(std::string name, Vector3 pid);
+  void add_sensor_time_step(std::string name, uint32_t timeStep);
+  void add_camera_quality(std::string name, double quality);
+  void add_camera_exposure(std::string name, double exposure);
+  void clear_actuator_request();
+
+  std::shared_ptr<ActuatorRequests> get_actuator_request();
+
+private:
+  std::shared_ptr<ActuatorRequests> actuator_request;
+};
+
+}  // namespace message_handler
+
+}  // namespace robocup_client
+
+#endif  // ROBOCUP_CLIENT__MESSAGE_HANDLER__MESSAGE_HANDLER_HPP_

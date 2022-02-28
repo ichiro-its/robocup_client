@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <robocup_client/robocup_client.hpp>
-
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
 #include <unistd.h>
@@ -27,6 +25,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+
+#include "robocup_client/robocup_client.hpp"
 
 int main(int argc, char * argv[])
 {
@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
   std::string host = argv[1];
   int port = std::stoi(argv[2]);
 
-  robocup_client::RobotClient client(host, port);
+  robocup_client::robot_client::RobotClient client(host, port);
   if (!client.connect()) {
     std::cerr << "Failed to connect to server on port " <<
       client.get_port() << "!" << std::endl;
@@ -45,18 +45,25 @@ int main(int argc, char * argv[])
     return 1;
   }
 
-  robocup_client::MessageHandler message;
+  robocup_client::message_handler::MessageHandler message;
   message.add_motor_position_in_degree("neck_pitch", 45.0);
   message.add_motor_position_in_degree("neck_yaw", 90.0);
+  message.add_motor_position_in_radian("left_knee", 0.0);
+  message.add_motor_position_in_radian("right_knee", 0.0);
   message.add_sensor_time_step("Camera", 16);
   message.add_sensor_time_step("gyro", 8);
   message.add_sensor_time_step("accelerometer", 16);
   message.add_sensor_time_step("neck_yaw_s", 8);
   message.add_sensor_time_step("neck_pitch_s", 8);
+  message.add_sensor_time_step("left_knee_s", 8);
+  message.add_sensor_time_step("right_knee_s", 8);
+
+  client.send(*message.get_actuator_request());
 
   while (client.get_tcp_socket()->is_connected()) {
     try {
-      client.send(*message.get_actuator_request());
+      message.clear_actuator_request();
+
       auto sensors = client.receive();
 
       // Get Gyro Data

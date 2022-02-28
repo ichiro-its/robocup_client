@@ -18,33 +18,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOT_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOT_CLIENT_HPP_
-
-#include <musen/musen.hpp>
+#ifndef ROBOCUP_CLIENT__COMMUNICATION__TCP__SENDER_HPP_
+#define ROBOCUP_CLIENT__COMMUNICATION__TCP__SENDER_HPP_
 
 #include <string>
-#include <memory>
-
-#include "./messages.pb.h"
+#include <vector>
 
 namespace robocup_client
 {
 
-class RobotClient : public musen::Client
+namespace communication
+{
+
+class Sender
 {
 public:
-  explicit RobotClient(
-    const std::string & host, const int & port,
-    std::shared_ptr<musen::TcpSocket> tcp_socket = std::make_shared<musen::TcpSocket>());
+  virtual size_t send_raw(const char * data, const size_t & length);
 
-  bool connect();
+  size_t send_string(const std::string & data);
+  size_t send_strings(const std::vector<std::string> & data, const std::string & delimiter = ",");
 
-  void receive_data(char * buffer, int bytes);
-  std::shared_ptr<SensorMeasurements> receive();
-  int send(const ActuatorRequests & data);
+  template<typename T>
+  size_t send(const T & data);
 };
+
+template<typename T>
+size_t Sender::send(const T & data)
+{
+  return send_raw((const char *)&data, sizeof(data));
+}
+
+}  // namespace communication
 
 }  // namespace robocup_client
 
-#endif  // ROBOCUP_CLIENT__ROBOT_CLIENT_HPP_
+#endif  // ROBOCUP_CLIENT__COMMUNICATION__TCP__SENDER_HPP_

@@ -18,14 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
-#define ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#ifndef ROBOCUP_CLIENT__NODE__ROBOCUP_CLIENT_NODE_HPP_
+#define ROBOCUP_CLIENT__NODE__ROBOCUP_CLIENT_NODE_HPP_
 
-#include "./messages.pb.h"
-#include "robocup_client/receiver/receiver.hpp"
-#include "robocup_client/sender/sender.hpp"
-#include "robocup_client/robot_client/robot_client.hpp"
-#include "robocup_client/communication/communication.hpp"
-#include "robocup_client/message_handler/message_handler.hpp"
+#include <memory>
+#include <string>
 
-#endif  // ROBOCUP_CLIENT__ROBOCUP_CLIENT_HPP_
+#include "rclcpp/rclcpp.hpp"
+#include "robocup_client/robocup_client.hpp"
+
+namespace robocup_client
+{
+
+class RobocupClientNode
+{
+public:
+  explicit RobocupClientNode(rclcpp::Node::SharedPtr node);
+
+  void set_robot_client(std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client);
+
+private:
+  rclcpp::Node::SharedPtr node;
+  rclcpp::TimerBase::SharedPtr node_timer;
+
+  std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client;
+  std::shared_ptr<robocup_client::sender::SenderNode> sender_node;
+  std::shared_ptr<robocup_client::receiver::ReceiverNode> receiver_node;
+};
+
+}  //  namespace robocup_client
+
+#endif  // ROBOCUP_CLIENT__NODE__ROBOCUP_CLIENT_NODE_HPP_
