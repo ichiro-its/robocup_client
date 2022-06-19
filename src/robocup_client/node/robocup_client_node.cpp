@@ -37,19 +37,23 @@ RobocupClientNode::RobocupClientNode(rclcpp::Node::SharedPtr node)
   node_timer = node->create_wall_timer(
     8ms,
     [this]() {
-      // update gyro, accelero, time, and image
-      robot_client->update_sensors();
+      if (this->robot_client) {
+        // update gyro, accelero, time, and image
+        this->robot_client->update_sensors();
+
+        // update positions to joints
+        this->receiver_node->publish_set_joints();
+      }
     }
   );
-
-  receiver_node = std::make_shared<robocup_client::receiver::ReceiverNode>(node, robot_client);
-  sender_node = std::make_shared<robocup_client::sender::SenderNode>(node, robot_client);
 }
 
 void RobocupClientNode::set_robot_client(
   std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client)
 {
   this->robot_client = robot_client;
+  receiver_node = std::make_shared<robocup_client::receiver::ReceiverNode>(node, robot_client);
+  sender_node = std::make_shared<robocup_client::sender::SenderNode>(node, robot_client);
 }
 
 }  // namespace robocup_client
