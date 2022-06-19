@@ -24,7 +24,6 @@
 #include <string>
 #include <memory>
 
-#include "kansei_interfaces/msg/orientation.hpp"
 #include "kansei_interfaces/msg/unit.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "robocup_client/communication/communication.hpp"

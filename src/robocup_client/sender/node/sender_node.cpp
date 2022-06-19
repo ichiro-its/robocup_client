@@ -72,9 +72,13 @@ void SenderNode::publish_unit()
   auto gyro = robot_client->get_gyro();
   auto accelero = robot_client->get_accelero();
 
-  unit_msg.gyro = {gyro.value().x(), gyro.value().y(), gyro.value().z()};
+  unit_msg.gyro.roll = gyro.value().x();
+  unit_msg.gyro.pitch = gyro.value().y();
+  unit_msg.gyro.yaw = gyro.value().z();
 
-  unit_msg.accelero = {accelero.value().x(), accelero.value().y(), accelero.value().z()};
+  unit_msg.accelero.x = accelero.value().x();
+  unit_msg.accelero.y = accelero.value().y();
+  unit_msg.accelero.z = accelero.value().z();
 
   this->unit_publisher->publish(unit_msg);
 }

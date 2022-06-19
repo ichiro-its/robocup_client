@@ -29,7 +29,7 @@
 #include "robocup_client/communication/communication.hpp"
 #include "robocup_client/robot_client/robot_client.hpp"
 
-#include "tachimawari_interfaces/srv/get_joints.hpp"
+#include "tachimawari_interfaces/msg/current_joints.hpp"
 #include "tachimawari_interfaces/msg/set_joints.hpp"
 #include "tachimawari/joint/model/joint.hpp"
 #include "tachimawari/joint/model/joint_id.hpp"
@@ -48,15 +48,17 @@ public:
   explicit ReceiverNode(
     rclcpp::Node::SharedPtr node,
     std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client);
-
+  
+  void publish_set_joints();
+  
 private:
   std::string get_node_prefix() const;
 
   std::shared_ptr<robocup_client::robot_client::RobotClient> robot_client;
 
-  rclcpp::Subscription<tachimawari_interfaces::msg::SetJoints>::SharedPtr set_joints_subscriber;
+  rclcpp::Subscription<tachimawari_interfaces::msg::CurrentJoints>::SharedPtr current_joints_subscriber;
 
-  rclcpp::Service<tachimawari_interfaces::srv::GetJoints>::SharedPtr get_joints_server;
+  rclcpp::Publisher<tachimawari_interfaces::msg::SetJoints>::SharedPtr set_joints_publisher;
 };
 
 }  // namespace receiver
